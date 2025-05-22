@@ -12,6 +12,7 @@ namespace mhwilds_api.Services
         {
         }
 
+        public DbSet<Armour> Armours { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<SkillRank> SkillRanks { get; set; }
 
