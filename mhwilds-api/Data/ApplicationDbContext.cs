@@ -20,10 +20,27 @@ namespace mhwilds_api.Services
         {
             base.OnModelCreating(modelBuilder);
 
+            /* relationships */
+
+            /* 1 - many */
             modelBuilder.Entity<Skill>()
                 .HasMany(s => s.Ranks)
                 .WithOne(sr => sr.Skill)
                 .HasForeignKey(sr => sr.SkillId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            /* 1 - 1 */
+            modelBuilder.Entity<Armour>()
+                .HasOne(r => r.Resistances)
+                .WithOne(a => a.Armour)
+                .HasForeignKey<Resistances>(r => r.ArmourId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            /* 1 - many */
+            modelBuilder.Entity<Armour>()
+                .HasMany(s => s.Slots)
+                .WithOne(a => a.Armour)
+                .HasForeignKey(a => a.ArmourId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -10,8 +10,9 @@
         public required int Rarity { get; set; }
         public required int Defense { get; set; }
         
-        //public Resistances Resistances { get; set; }
-        public List<Slot>? Slots { get; set; }
-        //public List<SkillRank>? Skills { get; set; }
+        public required Resistances Resistances { get; set; }
+        public List<Slot> Slots { get; set; } = new();
+
+        public List<SkillRank> Skills { get; set; }
     }
 }

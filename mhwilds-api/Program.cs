@@ -1,20 +1,18 @@
 using mhwilds_api.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Configuration.AddUserSecrets<Program>();
     var connectionString = builder.Configuration.GetConnectionString("Database")
         ?? throw new InvalidOperationException("Connection string 'Database' not found.");
-    
-    builder.Services.AddControllers();
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString)
-    );
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString)
     );
+
+    builder.Services.AddControllers()
+        .AddNewtonsoftJson();
 }
 
 var app = builder.Build();
