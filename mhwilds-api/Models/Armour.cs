@@ -13,6 +13,6 @@
         public required Resistances Resistances { get; set; }
         public List<Slot> Slots { get; set; } = new();
 
-        public List<SkillRank> Skills { get; set; }
+        public List<SkillRank> Skills { get; set; } = new();
     }
 }

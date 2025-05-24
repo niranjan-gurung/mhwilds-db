@@ -42,7 +42,7 @@ namespace mhwilds_api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(List<Skill> skills)
         {
-            if (skills == null || !skills.Any())
+            if (skills == null || skills.Count == 0)
                 return BadRequest("No skills found.");
 
             _context.Skills.AddRange(skills);

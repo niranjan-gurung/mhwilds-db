@@ -45,31 +45,31 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Armour armour)
+        public async Task<IActionResult> Create(List<Armour> armours)
         {
-            if (armour == null)
-                return BadRequest("No armour found.");
+            if (armours == null || armours.Count == 0)
+                return BadRequest("No armours found.");
 
-            if (armour.Skills != null && armour.Skills.Any())
+            foreach (var armour in armours)
             {
-                var skillRankIds = armour.Skills.Select(sr => sr.Id).ToList();
+                if (armour.Skills != null && armour.Skills.Count != 0)
+                {
+                    var skillRankIds = armour.Skills
+                        .Select(sr => sr.Id)
+                        .ToList();
 
-                var existingSkillRanks = await _context.SkillRanks
-                    .Where(sr => skillRankIds.Contains(sr.Id))
-                    .ToListAsync();
+                    var existingSkillRanks = await _context.SkillRanks
+                        .Where(sr => skillRankIds.Contains(sr.Id))
+                        .ToListAsync();
 
-                // Replace the Skills collection with the tracked entities
-                armour.Skills = existingSkillRanks;
+                    armour.Skills = existingSkillRanks;
+                }
             }
 
-            _context.Armours.Add(armour);
+            _context.Armours.AddRange(armours);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(Get), 
-                new { Id = armour.Id },
-                armour
-            );
+            return Ok(armours);
         }
 
         [HttpPatch("{Id}")]

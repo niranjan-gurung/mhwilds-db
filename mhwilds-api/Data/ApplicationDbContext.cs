@@ -31,8 +31,8 @@ namespace mhwilds_api.Services
 
             /* 1 - 1 */
             modelBuilder.Entity<Armour>()
-                .HasOne(r => r.Resistances)
-                .WithOne(a => a.Armour)
+                .HasOne(a => a.Resistances)
+                .WithOne(r => r.Armour)
                 .HasForeignKey<Resistances>(r => r.ArmourId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -42,6 +42,10 @@ namespace mhwilds_api.Services
                 .WithOne(a => a.Armour)
                 .HasForeignKey(a => a.ArmourId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Armour>()
+                .HasMany(a => a.Skills)
+                .WithMany(sr => sr.Armours);
         }
     }
 }

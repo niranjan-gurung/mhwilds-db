@@ -21,8 +21,6 @@ namespace mhwilds_api.Models
         [JsonIgnore]
         public Skill? Skill { get; set; }
         [JsonIgnore]
-        public Armour? Armour { get; set; }
-        [JsonIgnore]
-        public List<Armour> Armours { get; set; }
+        public List<Armour> Armours { get; set; } = new();
     }
 }
