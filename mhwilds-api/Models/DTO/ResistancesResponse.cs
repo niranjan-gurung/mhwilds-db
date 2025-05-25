@@ -1,16 +1,11 @@
-﻿using Newtonsoft.Json;
-
-namespace mhwilds_api.Models
+﻿namespace mhwilds_api.Models.DTO
 {
-    public class Resistances
+    public class ResistancesResponse
     {
-        public int Id { get; set; }
         public required string Fire { get; set; }
         public required string Water { get; set; }
         public required string Ice { get; set; }
         public required string Thunder { get; set; }
         public required string Dragon { get; set; }
-        public int ArmourId { get; set; }
-        public Armour? Armour { get; set; }
     }
 }

@@ -1,23 +1,21 @@
-﻿using Newtonsoft.Json;
-
-namespace mhwilds_api.Models
+﻿namespace mhwilds_api.Models.DTO
 {
-    public class Skill
+    public class SkillResponse
     {
         public int Id { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }
         public required string Description { get; set; }
-        public List<SkillRank> Ranks { get; set; } = new();
+
+        public List<SkillRankResponse>? Ranks { get; set; }
     }
 
-    public class SkillRank
+    public class SkillRankResponse
     {
         public int Id { get; set; }
         public int Level { get; set; }
         public required string Description { get; set; }
         public int SkillId { get; set; }
-        public Skill? Skill { get; set; }
-        public List<Armour> Armours { get; set; } = new();
+        public required string SkillName { get; set; }
     }
 }

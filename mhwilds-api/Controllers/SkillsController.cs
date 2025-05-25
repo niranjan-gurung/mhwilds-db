@@ -1,4 +1,6 @@
-﻿using mhwilds_api.Models;
+﻿using Mapster;
+using mhwilds_api.Models;
+using mhwilds_api.Models.DTO;
 using mhwilds_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +25,11 @@ namespace mhwilds_api.Controllers
                 .Include(s => s.Ranks)
                 .ToListAsync();
 
-            return Ok(skills);
+            if (skills == null || skills.Count == 0)
+                return BadRequest("No skills found.");
+
+            var responses = skills.Adapt<List<SkillResponse>>();
+            return Ok(responses);
         }
 
         [HttpGet("{Id}")]
@@ -36,7 +42,9 @@ namespace mhwilds_api.Controllers
             if (skill == null)
                 return NotFound();
 
-            return Ok(skill);
+            var response = skill.Adapt<SkillResponse>();
+
+            return Ok(response);
         }
 
         [HttpPost]

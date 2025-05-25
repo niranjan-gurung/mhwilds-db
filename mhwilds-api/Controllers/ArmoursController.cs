@@ -1,4 +1,6 @@
-﻿using mhwilds_api.Models;
+﻿using Mapster;
+using mhwilds_api.Models;
+using mhwilds_api.Models.DTO;
 using mhwilds_api.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +26,15 @@ namespace mhwilds_api.Controllers
                 .Include(r => r.Resistances)
                 .Include(a => a.Slots)
                 .Include(s => s.Skills)
+                .ThenInclude(sr => sr.Skill)
                 .ToListAsync();
 
-            return Ok(armours);
+            if (armours == null || armours.Count == 0)
+                return BadRequest("No armours found.");
+
+            var responses = armours.Adapt<List<ArmourResponse>>();
+
+            return Ok(responses);
         }
 
         [HttpGet("{Id}")]
@@ -36,12 +44,15 @@ namespace mhwilds_api.Controllers
                 .Include(r => r.Resistances)
                 .Include(a => a.Slots)
                 .Include(s => s.Skills)
+                .ThenInclude(sr => sr.Skill)
                 .FirstOrDefaultAsync(a => a.Id == Id);
 
             if (armour == null)
                 return NotFound();
 
-            return Ok(armour);
+            var response = armour.Adapt<ArmourResponse>();
+
+            return Ok(response);
         }
 
         [HttpPost]
