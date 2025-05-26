@@ -19,5 +19,6 @@ namespace mhwilds_api.Models
         public int SkillId { get; set; }
         public Skill? Skill { get; set; }
         public List<Armour> Armours { get; set; } = new();
+        public List<CharmRank> Charms { get; set; } = new();
     }
 }

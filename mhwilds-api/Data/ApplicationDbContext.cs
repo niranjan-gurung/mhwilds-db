@@ -15,6 +15,8 @@ namespace mhwilds_api.Services
         public DbSet<Armour> Armours { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<SkillRank> SkillRanks { get; set; }
+        public DbSet<Charm> Charms { get; set; }
+        public DbSet<CharmRank> CharmRanks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,30 +24,50 @@ namespace mhwilds_api.Services
 
             /* relationships */
 
-            /* 1 - many */
+            /// skill -> skillRanks
+            /// 1 - many
             modelBuilder.Entity<Skill>()
                 .HasMany(s => s.Ranks)
                 .WithOne(sr => sr.Skill)
                 .HasForeignKey(sr => sr.SkillId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            /* 1 - 1 */
+            /// armour -> resistances
+            /// 1 - 1
             modelBuilder.Entity<Armour>()
                 .HasOne(a => a.Resistances)
                 .WithOne(r => r.Armour)
                 .HasForeignKey<Resistances>(r => r.ArmourId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            /* 1 - many */
+            /// armour -> slots
+            /// 1 - many
             modelBuilder.Entity<Armour>()
                 .HasMany(s => s.Slots)
                 .WithOne(a => a.Armour)
                 .HasForeignKey(a => a.ArmourId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            /// armour -> skillRanks
+            /// many - many            
             modelBuilder.Entity<Armour>()
                 .HasMany(a => a.Skills)
                 .WithMany(sr => sr.Armours);
+
+
+            /// charm -> charmRanks
+            /// 1 - many
+            modelBuilder.Entity<Charm>()
+                .HasMany(c => c.Ranks)
+                .WithOne(cr => cr.Charm)
+                .HasForeignKey(cr => cr.CharmId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            /// charmRanks -> skillRanks
+            /// many - many
+            modelBuilder.Entity<CharmRank>()
+                .HasMany(cr => cr.Skills)
+                .WithMany(sr => sr.Charms);
         }
     }
 }
