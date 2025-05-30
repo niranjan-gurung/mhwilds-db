@@ -1,7 +1,5 @@
 ﻿using mhwilds_api.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace mhwilds_api.Services
 {

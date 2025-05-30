@@ -1,10 +1,12 @@
 ﻿using Mapster;
+using mhwilds_api.DTO.Request;
+using mhwilds_api.DTO.Response;
 using mhwilds_api.Models;
-using mhwilds_api.Models.DTO;
 using mhwilds_api.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace mhwilds_api.Controllers
 {
@@ -32,13 +34,13 @@ namespace mhwilds_api.Controllers
             if (armours == null || armours.Count == 0)
                 return BadRequest("No armours found.");
 
-            var responses = armours.Adapt<List<ArmourResponse>>();
+            var responses = armours.Adapt<List<GetArmourResponse>>();
 
             return Ok(responses);
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> Get(int Id)
+        public async Task<IActionResult> Get([FromRoute] int Id)
         {
             var armour = await _context.Armours
                 .Include(r => r.Resistances)
@@ -50,41 +52,49 @@ namespace mhwilds_api.Controllers
             if (armour == null)
                 return NotFound();
 
-            var response = armour.Adapt<ArmourResponse>();
+            var response = armour.Adapt<GetArmourResponse>();
 
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(List<Armour> armours)
+        public async Task<IActionResult> Create([FromBody] List<CreateArmourRequest> armours)
         {
-            if (armours == null || armours.Count == 0)
-                return BadRequest("No armours found.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            foreach (var armour in armours)
+            var request = armours.Adapt<List<Armour>>();
+
+            for (int i = 0; i < request.Count; i++)
             {
-                if (armour.Skills != null && armour.Skills.Count != 0)
-                {
-                    var skillRankIds = armour.Skills
-                        .Select(sr => sr.Id)
-                        .ToList();
+                var dto = armours[i];
+                var armour = request[i];
 
-                    var existingSkillRanks = await _context.SkillRanks
+                var skillRankIds = dto.Skills?
+                    .Select(sr => sr.Id)
+                    .ToList();
+
+                if (skillRankIds.Count > 0)
+                {
+                    var skillRanks = await _context.SkillRanks
                         .Where(sr => skillRankIds.Contains(sr.Id))
                         .ToListAsync();
 
-                    armour.Skills = existingSkillRanks;
+                    armour.Skills = skillRanks;
                 }
             }
 
-            _context.Armours.AddRange(armours);
+            _context.Armours.AddRange(request);
             await _context.SaveChangesAsync();
 
-            return Ok(armours);
+            var response = armours.Adapt<List<GetArmourResponse>>();
+
+            // return 201 response, location: /api/armours
+            return Created("api/armours", response);
         }
 
         [HttpPatch("{Id}")]
-        public async Task<IActionResult> Patch(int Id, [FromBody] JsonPatchDocument<Armour> patchDoc)
+        public async Task<IActionResult> Patch([FromRoute] int Id, [FromBody] JsonPatchDocument<Armour> patchDoc)
         {
             if (patchDoc != null)
             {

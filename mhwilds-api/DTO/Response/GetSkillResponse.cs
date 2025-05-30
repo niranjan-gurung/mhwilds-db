@@ -1,6 +1,6 @@
-﻿namespace mhwilds_api.Models.DTO
+﻿namespace mhwilds_api.DTO.Response
 {
-    public class SkillResponse
+    public class GetSkillResponse
     {
         public int Id { get; set; }
         public required string Name { get; set; }

@@ -1,6 +1,6 @@
-﻿namespace mhwilds_api.Models.DTO
+﻿namespace mhwilds_api.DTO.Request
 {
-    public class ResistancesResponse
+    public class CreateResistancesRequest
     {
         public required string Fire { get; set; }
         public required string Water { get; set; }

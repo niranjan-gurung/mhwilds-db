@@ -1,9 +1,10 @@
 ﻿using Mapster;
 using mhwilds_api.Models;
-using mhwilds_api.Models.DTO;
 using mhwilds_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using mhwilds_api.DTO.Request;
+using mhwilds_api.DTO.Response;
 
 namespace mhwilds_api.Controllers
 {
@@ -28,12 +29,12 @@ namespace mhwilds_api.Controllers
             if (skills == null || skills.Count == 0)
                 return BadRequest("No skills found.");
 
-            var responses = skills.Adapt<List<SkillResponse>>();
+            var responses = skills.Adapt<List<GetSkillResponse>>();
             return Ok(responses);
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> Get(int Id)
+        public async Task<IActionResult> Get([FromRoute] int Id)
         {
             var skill = await _context.Skills
                 .Include(s => s.Ranks)
@@ -42,99 +43,26 @@ namespace mhwilds_api.Controllers
             if (skill == null)
                 return NotFound();
 
-            var response = skill.Adapt<SkillResponse>();
+            var response = skill.Adapt<GetSkillResponse>();
 
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(List<Skill> skills)
+        public async Task<IActionResult> Create([FromBody] List<CreateSkillRequest> skills)
         {
-            if (skills == null || skills.Count == 0)
-                return BadRequest("No skills found.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.Skills.AddRange(skills);
+            var request = skills.Adapt<List<Skill>>();
+
+            _context.Skills.AddRange(request);
             await _context.SaveChangesAsync();
+
+            var response = request.Adapt<List<GetSkillResponse>>();
 
             // return 201 response, location: /api/skills
-            return Created("api/skills", skills);
-        }
-
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> Update(int Id, Skill skill)
-        {
-            if (Id != skill.Id)
-                return BadRequest();
-
-            _context.Entry(skill).State = EntityState.Modified;
-
-            // handle related SkillRanks - this is important for updating related entities
-            if (skill.Ranks != null)
-            {
-                // get existing ranks
-                var existingRanks = await _context.SkillRanks
-                    .Where(r => r.SkillId == Id)
-                    .ToListAsync();
-
-                // remove ranks that aren't in the update
-                var rankIdsToKeep = skill.Ranks.Select(r => r.Id).ToList();
-                var ranksToRemove = existingRanks
-                    .Where(r => r.Id > 0 && !rankIdsToKeep.Contains(r.Id))
-                    .ToList();
-
-                foreach (var rank in ranksToRemove)
-                {
-                    _context.SkillRanks.Remove(rank);
-                }
-
-                // update or add ranks
-                foreach (var rank in skill.Ranks)
-                {
-                    if (rank.Id == 0)
-                    {
-                        // this is a new rank, add it
-                        rank.SkillId = Id;
-                        _context.SkillRanks.Add(rank);
-                    }
-                    else
-                    {
-                        // This is an existing rank, update it
-                        _context.Entry(rank).State = EntityState.Modified;
-                    }
-                }
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SkillExists(Id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int Id)
-        {
-            var skill = await _context.Skills.FindAsync(Id);
-            if (skill == null)
-                return NotFound();
-
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool SkillExists(int Id)
-        {
-            return _context.Skills.Any(e => e.Id == Id);
+            return Created("api/skills", response);
         }
     }
 }
