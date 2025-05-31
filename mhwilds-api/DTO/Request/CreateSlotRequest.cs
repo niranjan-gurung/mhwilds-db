@@ -2,6 +2,6 @@
 {
     public class CreateSlotRequest
     {
-        public int Level { get; set; }
+        public required int Level { get; set; }
     }
 }

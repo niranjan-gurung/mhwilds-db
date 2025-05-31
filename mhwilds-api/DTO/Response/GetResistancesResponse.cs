@@ -2,10 +2,10 @@
 {
     public class GetResistancesResponse
     {
-        public required string Fire { get; set; }
-        public required string Water { get; set; }
-        public required string Ice { get; set; }
-        public required string Thunder { get; set; }
-        public required string Dragon { get; set; }
+        public int Fire { get; set; }
+        public int Water { get; set; }
+        public int Ice { get; set; }
+        public int Thunder { get; set; }
+        public int Dragon { get; set; }
     }
 }

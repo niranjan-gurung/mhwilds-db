@@ -34,7 +34,7 @@ namespace mhwilds_api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id:int}")]
         public async Task<IActionResult> Get([FromRoute] int Id)
         {
             return Ok();

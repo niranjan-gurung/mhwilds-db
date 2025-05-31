@@ -39,7 +39,7 @@ namespace mhwilds_api.Controllers
             return Ok(responses);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id:int}")]
         public async Task<IActionResult> Get([FromRoute] int Id)
         {
             var armour = await _context.Armours
@@ -93,7 +93,7 @@ namespace mhwilds_api.Controllers
             return Created("api/armours", response);
         }
 
-        [HttpPatch("{Id}")]
+        [HttpPatch("{Id:int}")]
         public async Task<IActionResult> Patch([FromRoute] int Id, [FromBody] JsonPatchDocument<Armour> patchDoc)
         {
             if (patchDoc != null)

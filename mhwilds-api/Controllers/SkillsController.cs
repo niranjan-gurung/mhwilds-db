@@ -33,7 +33,7 @@ namespace mhwilds_api.Controllers
             return Ok(responses);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id:int}")]
         public async Task<IActionResult> Get([FromRoute] int Id)
         {
             var skill = await _context.Skills

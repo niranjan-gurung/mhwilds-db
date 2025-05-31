@@ -3,15 +3,14 @@
     public class GetArmourResponse
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
+        public string? Name { get; set; }
         public string? Slug { get; set; }
-        public required string Type { get; set; }
-        public required string Rank { get; set; }
-        public required int Rarity { get; set; }
-        public required int Defense { get; set; }
-
-        public required GetResistancesResponse Resistances { get; set; }
-        public List<GetSlotResponse> Slots { get; set; } = new();
-        public List<SkillRankResponse> Skills { get; set; } = new();
+        public string? Type { get; set; }
+        public string? Rank { get; set; }
+        public int Rarity { get; set; }
+        public int Defense { get; set; }
+        public GetResistancesResponse? Resistances { get; set; }
+        public List<GetSlotResponse> Slots { get; set; } = [];
+        public List<SkillRankResponse> Skills { get; set; } = [];
     }
 }

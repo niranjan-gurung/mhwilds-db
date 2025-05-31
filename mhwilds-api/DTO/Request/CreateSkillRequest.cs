@@ -6,12 +6,12 @@
         public required string Type { get; set; }
         public required string Description { get; set; }
 
-        public List<CreateSkillRankRequest>? Ranks { get; set; }
+        public required List<CreateSkillRankRequest>? Ranks { get; set; }
     }
 
     public class CreateSkillRankRequest
     {
-        public int Level { get; set; }
+        public required int Level { get; set; }
         public required string Description { get; set; }
     }
 }
