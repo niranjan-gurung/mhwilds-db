@@ -1,3 +1,6 @@
+using Mapster;
+using mhwilds_api.DTO.Response;
+using mhwilds_api.Models;
 using mhwilds_api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers()
         .AddNewtonsoftJson();
+
+    //TypeAdapterConfig<SkillRank, GetSkillRankResponse>
+    //    .NewConfig()
+    //    .Map(dest => dest.SkillName, src => src.Skill != null ? src.Skill.Name : null);
+    //TypeAdapterConfig.GlobalSettings.Compile();
 }
 
 var app = builder.Build();

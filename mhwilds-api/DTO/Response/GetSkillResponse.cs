@@ -6,10 +6,10 @@
         public string? Name { get; set; }
         public string? Type { get; set; }
         public string? Description { get; set; }
-        public List<SkillRankResponse>? Ranks { get; set; }
+        public List<GetSkillRankResponse>? Ranks { get; set; }
     }
 
-    public class SkillRankResponse
+    public class GetSkillRankResponse
     {
         public int Id { get; set; }
         public int Level { get; set; }

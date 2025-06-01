@@ -4,6 +4,7 @@ using mhwilds_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.DTO.Request;
 
 namespace mhwilds_api.Controllers
 {
@@ -23,7 +24,8 @@ namespace mhwilds_api.Controllers
         {
             var charms = await _context.Charms
                 .Include(c => c.Ranks)
-                .ThenInclude(cr => cr.Skills)
+                    .ThenInclude(r => r.Skills)
+                        .ThenInclude(s => s.Skill)
                 .ToListAsync();
 
             if (charms == null || charms.Count == 0)
@@ -37,88 +39,57 @@ namespace mhwilds_api.Controllers
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> Get([FromRoute] int Id)
         {
-            return Ok();
+            var charm = await _context.Charms
+                .Include(c => c.Ranks)
+                    .ThenInclude(r => r.Skills)
+                        .ThenInclude(s => s.Skill)
+                .FirstOrDefaultAsync(c => c.Id == Id);
+
+            if (charm == null)
+                return NotFound();
+
+            var response = charm.Adapt<GetCharmResponse>();
+
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] List<Charm> charms)
+        public async Task<IActionResult> Create([FromBody] List<CreateCharmRequest> charms)
         {
-            if (charms == null || charms.Count == 0)
-                return BadRequest("No charms found.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            //var skillIds = charms
-            //    .SelectMany(c => c.Ranks)
-            //    .SelectMany(r => r.Skills)
-            //    .Where(sr => sr.SkillId != 0)
-            //    .Select(sr => sr.SkillId)
-            //    .Distinct()
-            //    .ToList();
+            var request = charms.Adapt<List<Charm>>();
 
-            //// fetch all required skills in one database call
-            //var existingSkillRanks = await _context.SkillRanks
-            //    .Where(s => skillIds.Contains(s.Id))
-            //    .ToDictionaryAsync(s => s.Id, s => s);
+            for (int i = 0; i < request.Count; i++)
+            {
+                var dto = charms[i];
+                var charm = request[i];
 
-            //try
-            //{
-            //    foreach (var charm in charms)
-            //    {
-            //        if (charm.Ranks == null || charm.Ranks.Count == 0)
-            //            return BadRequest($"Charm '{charm.Name}' must have at least one rank.");
+                for (int j = 0; j < charm.Ranks.Count; j++)
+                {
+                    var skillRankIds = dto.Ranks[j].Skills?
+                        .Select(sr => sr.Id)
+                        .ToList();
 
-            //        foreach (var rank in charm.Ranks)
-            //        {
-            //            rank.Charm = charm;
+                    if (skillRankIds?.Count > 0)
+                    {
+                        var skillRanks = await _context.SkillRanks
+                            .Where(sr => skillRankIds.Contains(sr.Id))
+                            .Include(sr => sr.Skill)
+                            .ToListAsync();
 
-            //            if (rank.Skills != null)
-            //            {
-            //                var newSkillRanks = new List<SkillRank>();
-            //                foreach (var skillRank in rank.Skills)
-            //                {
-            //                    if (skillRank.SkillId != 0)
-            //                    {
-            //                        if (existingSkillRanks.TryGetValue(skillRank.SkillId, out var existingSkillRank))
-            //                            newSkillRanks.Add(existingSkillRank);
-            //                        else
-            //                            return BadRequest($"Skill with Id {skillRank.SkillId} not found.");
-            //                    }
-            //                    else
-            //                    {
-            //                        newSkillRanks.Add(skillRank);
-            //                    }
-            //                }
+                        charm.Ranks[j].Skills = skillRanks;
+                    }
+                }
+            }
+            
+            _context.Charms.AddRange(request);
+            await _context.SaveChangesAsync();
 
-            //                rank.Skills = newSkillRanks;
-            //            }
-            //        }
-            //        _context.Charms.Add(charm);
-            //    }
+            var response = charms.Adapt<List<GetCharmResponse>>();
 
-            //    await _context.SaveChangesAsync();
-
-            //    // return the created charms with assigned IDs
-            //    var createdCharmsWithIds = await _context.Charms
-            //        .Include(c => c.Ranks)
-            //        .ThenInclude(r => r.Skills)
-            //        .ThenInclude(sr => sr.Skill)
-            //        .Where(c => charms.Select(ch => ch.Name).Contains(c.Name))
-            //        .ToListAsync();
-
-            //    var response = createdCharmsWithIds.Adapt<List<GetCharmResponse>>();
-            //    return Ok(response);
-            //}
-            //catch (DbUpdateConcurrencyException dbEx)
-            //{
-            //    if (dbEx.InnerException?.Message.Contains("UNIQUE constraint") == true)
-            //        return Conflict("A charm or rank with this data already exists.");
-
-            //    return StatusCode(500, "Database error occurred while creating charms.");
-            //}
-            //catch (Exception ex) 
-            //{
-            //    return StatusCode(500, $"An unexpected error occurred while creating charms: {ex}");
-            //}
-            return Ok();
+            return Created("api/charms", response);
         }
     }
 }

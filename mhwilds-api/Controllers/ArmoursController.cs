@@ -28,15 +28,15 @@ namespace mhwilds_api.Controllers
                 .Include(r => r.Resistances)
                 .Include(a => a.Slots)
                 .Include(s => s.Skills)
-                .ThenInclude(sr => sr.Skill)
+                    .ThenInclude(sr => sr.Skill)
                 .ToListAsync();
 
             if (armours == null || armours.Count == 0)
                 return BadRequest("No armours found.");
 
-            var responses = armours.Adapt<List<GetArmourResponse>>();
+            var response = armours.Adapt<List<GetArmourResponse>>();
 
-            return Ok(responses);
+            return Ok(response);
         }
 
         [HttpGet("{Id:int}")]
@@ -46,7 +46,7 @@ namespace mhwilds_api.Controllers
                 .Include(r => r.Resistances)
                 .Include(a => a.Slots)
                 .Include(s => s.Skills)
-                .ThenInclude(sr => sr.Skill)
+                    .ThenInclude(sr => sr.Skill)
                 .FirstOrDefaultAsync(a => a.Id == Id);
 
             if (armour == null)

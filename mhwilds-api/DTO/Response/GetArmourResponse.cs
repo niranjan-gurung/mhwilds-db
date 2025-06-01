@@ -11,6 +11,6 @@
         public int Defense { get; set; }
         public GetResistancesResponse? Resistances { get; set; }
         public List<GetSlotResponse> Slots { get; set; } = [];
-        public List<SkillRankResponse> Skills { get; set; } = [];
+        public List<GetSkillRankResponse> Skills { get; set; } = [];
     }
 }

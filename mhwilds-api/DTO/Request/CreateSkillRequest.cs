@@ -6,7 +6,7 @@
         public required string Type { get; set; }
         public required string Description { get; set; }
 
-        public required List<CreateSkillRankRequest>? Ranks { get; set; }
+        public required List<CreateSkillRankRequest> Ranks { get; set; } = [];
     }
 
     public class CreateSkillRankRequest

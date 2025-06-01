@@ -14,6 +14,6 @@ namespace mhwilds_api.DTO.Request
         public required int Defense { get; set; }
         public required CreateResistancesRequest Resistances { get; set; }
         public required List<CreateSlotRequest> Slots { get; set; } = [];
-        public required List<SkillRankResponse> Skills { get; set; } = [];
+        public required List<GetSkillRankResponse> Skills { get; set; } = [];
     }
 }

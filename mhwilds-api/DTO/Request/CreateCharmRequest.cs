@@ -1,0 +1,19 @@
+﻿using mhwilds_api.DTO.Response;
+
+namespace mhwilds_api.DTO.Request
+{
+    public class CreateCharmRequest
+    {
+        public required string Name { get; set; }
+        public required List<CreateCharmRankRequest> Ranks { get; set; } = [];
+    }
+
+    public class CreateCharmRankRequest
+    {
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public int Level { get; set; }
+        public int Rarity { get; set; }
+        public required List<GetSkillRankResponse> Skills { get; set; } = [];
+    }
+}
