@@ -13,7 +13,6 @@ namespace mhwilds_api.Controllers
     public class SkillsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
         public SkillsController(ApplicationDbContext context)
         {
             _context = context;
@@ -63,6 +62,19 @@ namespace mhwilds_api.Controllers
 
             // return 201 response, location: /api/skills
             return Created("api/skills", response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var skill = await _context.Skills.FindAsync(Id);
+            if (skill == null)
+                return NotFound();
+
+            _context.Skills.Remove(skill);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace mhwilds_api.Services
         public DbSet<SkillRank> SkillRanks { get; set; }
         public DbSet<Charm> Charms { get; set; }
         public DbSet<CharmRank> CharmRanks { get; set; }
+        public DbSet<Decoration> Decorations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,7 +53,6 @@ namespace mhwilds_api.Services
                 .HasMany(a => a.Skills)
                 .WithMany(sr => sr.Armours);
 
-
             /// charm -> charmRanks
             /// 1 - many
             modelBuilder.Entity<Charm>()
@@ -66,6 +66,12 @@ namespace mhwilds_api.Services
             modelBuilder.Entity<CharmRank>()
                 .HasMany(cr => cr.Skills)
                 .WithMany(sr => sr.Charms);
+
+            ///// decorations -> skillRanks
+            ///// many - many            
+            //modelBuilder.Entity<Armour>()
+            //    .HasMany(a => a.Skills)
+            //    .WithMany(sr => sr.Armours);
         }
     }
 }

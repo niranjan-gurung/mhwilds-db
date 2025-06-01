@@ -15,7 +15,6 @@ namespace mhwilds_api.Controllers
     public class ArmoursController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public ArmoursController(ApplicationDbContext context)
         {
             _context = context;
@@ -117,6 +116,19 @@ namespace mhwilds_api.Controllers
             }
             else
                 return BadRequest(ModelState);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var armour = await _context.Armours.FindAsync(Id);
+            if (armour == null)
+                return NotFound();
+
+            _context.Armours.Remove(armour);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
