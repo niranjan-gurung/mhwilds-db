@@ -35,7 +35,7 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpGet("{Id:int}")]
-        public async Task<IActionResult> GetAll([FromRoute] int Id)
+        public async Task<IActionResult> Get([FromRoute] int Id)
         {
             var decoration = await _context.Decorations
                 .Include(s => s.Skills)
@@ -63,7 +63,7 @@ namespace mhwilds_api.Controllers
                 var dto = decorations[i];
                 var deco = request[i];
 
-                var skillRankIds = dto.Skills?
+                var skillRankIds = dto.Skills
                     .Select(sr => sr.Id)
                     .ToList();
 
@@ -80,7 +80,7 @@ namespace mhwilds_api.Controllers
             _context.Decorations.AddRange(request);
             await _context.SaveChangesAsync();
 
-            var response = decorations.Adapt<List<GetDeorationResponse>>();
+            var response = request.Adapt<List<GetDeorationResponse>>();
 
             // return 201 response, location: /api/decorations
             return Created("api/decorations", response);

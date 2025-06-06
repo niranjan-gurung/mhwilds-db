@@ -67,11 +67,11 @@ namespace mhwilds_api.Services
                 .HasMany(cr => cr.Skills)
                 .WithMany(sr => sr.Charms);
 
-            ///// decorations -> skillRanks
-            ///// many - many            
-            //modelBuilder.Entity<Armour>()
-            //    .HasMany(a => a.Skills)
-            //    .WithMany(sr => sr.Armours);
+            /// decorations -> skillRanks
+            /// many - many            
+            modelBuilder.Entity<Decoration>()
+                .HasMany(a => a.Skills)
+                .WithMany(sr => sr.Decorations);
         }
     }
 }
