@@ -1,15 +1,13 @@
-﻿## ( Currently porting over from python/flask )
+﻿## A database collection of all of the following:
 
-A database collection of all of the following:
-
-- Weapons 
-- Armours
-- Charms
-- Decorations
-- Skills
-- Food Buffs
-- Set bonuses
-- Group Skills
+- Weapons (TODO)
+- Armours (COMPLETE)
+- Charms (COMPLETE)
+- Decorations (COMPLETE)
+- Skills (COMPLETE)
+- Food Buffs (TODO)
+- Set bonuses (TODO)
+- Group Skills (TODO)
 
 This is focused specifically towards set building, this will not contain things like crafting materials,
 prices, or other miscellaneous items which do not affect stats.
