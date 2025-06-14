@@ -2,8 +2,8 @@ services:
     mhwilds-api:
         image: ${DOCKER_REGISTRY}mhwildsapi
         build:
-            context: .
-            dockerfile: mhwilds-api/Dockerfile
+            context: ./src/mhwilds-api/
+            dockerfile: Dockerfile
         ports:
             - 5000:5000
             - 5001:5001
