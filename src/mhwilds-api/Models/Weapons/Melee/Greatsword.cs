@@ -1,0 +1,10 @@
+﻿using mhwilds_api.Models.Weapons.Common;
+
+namespace mhwilds_api.Models.Weapons.Melee
+{
+    public class Greatsword : BaseWeapon
+    {
+        public override WeaponType WeaponType => WeaponType.Greatsword;
+        public Sharpness Sharpness { get; set; }
+    }
+}

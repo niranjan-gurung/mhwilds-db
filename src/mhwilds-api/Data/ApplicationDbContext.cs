@@ -37,14 +37,6 @@ namespace mhwilds_api.Services
             modelBuilder.Entity<Armour>()
                 .OwnsOne(a => a.Resistances);
 
-            /// armour -> slots
-            /// 1 - many
-            //modelBuilder.Entity<Armour>()
-            //    .HasMany(s => s.Slots)
-            //    .WithOne(a => a.Armour)
-            //    .HasForeignKey(a => a.ArmourId)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
             /// armour -> skillRanks
             /// many - many            
             modelBuilder.Entity<Armour>()
