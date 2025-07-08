@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Type { get; set; }
-        public int level { get; set; }
+        public int Level { get; set; }
         public int Capacity { get; set; }
         public bool Rapid { get; set; }
     }

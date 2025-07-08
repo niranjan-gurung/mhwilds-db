@@ -4,7 +4,10 @@ namespace mhwilds_api.Models.Weapons.Melee
 {
     public class Longsword : BaseWeapon
     {
-        public override WeaponType WeaponType => WeaponType.Longsword;
+        public Longsword()
+        {
+            WeaponType = WeaponType.Longsword;
+        }
         public Sharpness Sharpness { get; set; }
     }
 }

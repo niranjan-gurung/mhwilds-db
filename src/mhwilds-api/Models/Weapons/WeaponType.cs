@@ -1,34 +1,22 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace mhwilds_api.Models.Weapons;
+﻿namespace mhwilds_api.Models.Weapons;
 
 /// 
 /// represents all weapon types currently in the game
 /// 
-[JsonConverter(typeof(StringEnumConverter))]
 public enum WeaponType
 {
     Greatsword = 0,
     Longsword,
-    [JsonProperty("dual_blades")]
     DualBlades,
     Hammer,
-    [JsonProperty("hunting_horn")]
     HuntingHorn,
     Gunlance,
     Lance,
-    [JsonProperty("sword_and_shield")]
     SwordAndShield,
-    [JsonProperty("charge_blade")]
     ChargeBlade,
-    [JsonProperty("switch_axe")]
     SwitchAxe,
-    [JsonProperty("insect_glaive")]
     InsectGlaive,
-    [JsonProperty("light_bowgun")]
     LightBowgun,
-    [JsonProperty("heavy_bowgun")]
     HeavyBowgun,
     Bow
 }

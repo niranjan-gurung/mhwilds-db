@@ -4,7 +4,10 @@ namespace mhwilds_api.Models.Weapons.Melee
 {
     public class Lance : BaseWeapon
     {
-        public override WeaponType WeaponType => WeaponType.Lance;
+        public Lance()
+        {
+            WeaponType = WeaponType.Lance;
+        }
         public Sharpness Sharpness { get; set; }
     }
 }

@@ -13,11 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers()
         .AddNewtonsoftJson();
-
-    //TypeAdapterConfig<SkillRank, GetSkillRankResponse>
-    //    .NewConfig()
-    //    .Map(dest => dest.SkillName, src => src.Skill != null ? src.Skill.Name : null);
-    //TypeAdapterConfig.GlobalSettings.Compile();
 }
 
 var app = builder.Build();

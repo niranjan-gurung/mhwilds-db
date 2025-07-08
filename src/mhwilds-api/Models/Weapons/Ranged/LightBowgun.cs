@@ -4,7 +4,10 @@ namespace mhwilds_api.Models.Weapons.Ranged
 {
     public class LightBowgun : BaseWeapon
     {
-        public override WeaponType WeaponType => WeaponType.LightBowgun;
+        public LightBowgun()
+        {
+            WeaponType = WeaponType.LightBowgun;
+        }
         public Ammo Ammo { get; set; }
         public string SpecialAmmo { get; set; }
     }

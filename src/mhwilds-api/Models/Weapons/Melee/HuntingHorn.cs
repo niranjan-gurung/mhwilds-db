@@ -4,7 +4,10 @@ namespace mhwilds_api.Models.Weapons.Melee
 {
     public class HuntingHorn : BaseWeapon
     {
-        public override WeaponType WeaponType => WeaponType.HuntingHorn;
+        public HuntingHorn()
+        {
+            WeaponType = WeaponType.HuntingHorn;
+        }
         public Sharpness Sharpness { get; set; }
     }
 }
