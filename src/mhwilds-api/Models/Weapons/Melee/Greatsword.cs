@@ -4,7 +4,6 @@ namespace mhwilds_api.Models.Weapons.Melee
 {
     public class Greatsword : BaseWeapon
     {
-        //public override WeaponType WeaponType => WeaponType.Greatsword;
         public Greatsword()
         {
             WeaponType = WeaponType.Greatsword;

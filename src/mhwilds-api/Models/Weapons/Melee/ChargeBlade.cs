@@ -8,7 +8,7 @@ namespace mhwilds_api.Models.Weapons.Melee
         {
             WeaponType = WeaponType.ChargeBlade;
         }
-        public string Phial {  get; set; }
+        public PhialType Phial {  get; set; }
         public Sharpness Sharpness { get; set; }
     }
 }

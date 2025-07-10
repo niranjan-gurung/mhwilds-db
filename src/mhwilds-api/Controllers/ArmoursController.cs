@@ -12,7 +12,7 @@ namespace mhwilds_api.Controllers
 {
     [ApiController]
     [Route("api/armours")]
-    public class ArmoursController : Controller
+    public class ArmoursController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public ArmoursController(ApplicationDbContext context)
