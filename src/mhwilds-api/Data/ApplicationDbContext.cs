@@ -110,6 +110,12 @@ namespace mhwilds_api.Services
             modelBuilder.Entity<BaseWeapon>()
                .HasIndex(w => w.WeaponType);
 
+            // configure: many to many relationship between weapons and skills
+            modelBuilder.Entity<BaseWeapon>()
+                .HasMany(w => w.Skills)
+                .WithMany()
+                .UsingEntity(j => j.ToTable("BaseWeaponSkillRank"));
+
             // Damage: owned type to base weapon
             modelBuilder.Entity<BaseWeapon>()
                 .OwnsOne(w => w.Damage, damage =>
@@ -146,7 +152,7 @@ namespace mhwilds_api.Services
 
         private void ConfigureMeleeWeaponSharpness(ModelBuilder modelBuilder)
         {
-            // Configure sharpness for all melee weapon types
+            // configure sharpness for all melee weapon types
             ConfigureSharpnessForWeapon<Greatsword>(modelBuilder);
             ConfigureSharpnessForWeapon<Longsword>(modelBuilder);
             ConfigureSharpnessForWeapon<DualBlades>(modelBuilder);
@@ -162,7 +168,7 @@ namespace mhwilds_api.Services
 
         private void ConfigureSharpnessForWeapon<T>(ModelBuilder modelBuilder) where T : BaseWeapon
         {
-            // Check if the weapon type has a Sharpness property
+            // check if the weapon type has a sharpness property
             var sharpnessProperty = typeof(T).GetProperty("Sharpness");
             if (sharpnessProperty != null)
             {

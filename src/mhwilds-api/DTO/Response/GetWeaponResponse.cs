@@ -25,6 +25,7 @@ namespace mhwilds_api.DTO.Response
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [JsonProperty("type")]
         public WeaponType WeaponType { get; set; }
         public int Defense { get; set; }
         public int Rarity { get; set; }
@@ -32,7 +33,6 @@ namespace mhwilds_api.DTO.Response
         public int Affinity { get; set; }
         public Damage Damage { get; set; }
         public Element? Element { get; set; }
-        public int? Elderseal { get; set; }
         public List<GetSkillRankResponse>? Skills { get; set; }
     }
 
@@ -44,22 +44,22 @@ namespace mhwilds_api.DTO.Response
 
     public class GetLongswordResponse : GetWeaponResponse
     {
-        public GetLongswordResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetDualBladesResponse : GetWeaponResponse
     {
-        public GetDualBladesResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetSwordAndShieldResponse : GetWeaponResponse
     {
-        public GetSwordAndShieldResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetHammerResponse : GetWeaponResponse
     {
-        public GetHammerResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetHuntingHornResponse : GetWeaponResponse
@@ -70,12 +70,12 @@ namespace mhwilds_api.DTO.Response
 
     public class GetGunlanceResponse : GetWeaponResponse
     {
-        public GetGunlanceResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetLanceResponse : GetWeaponResponse
     {
-        public GetLanceResponse? Sharpness { get; set; }
+        public GetSharpnessResponse? Sharpness { get; set; }
     }
 
     public class GetChargeBladesResponse : GetWeaponResponse

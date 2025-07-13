@@ -7,11 +7,27 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace mhwilds_api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Ammo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    Level = table.Column<int>(type: "integer", nullable: false),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    Rapid = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ammo", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Armours",
                 columns: table => new
@@ -82,6 +98,56 @@ namespace mhwilds_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Weapons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    WeaponType = table.Column<int>(type: "integer", nullable: false),
+                    Defense = table.Column<int>(type: "integer", nullable: false),
+                    Rarity = table.Column<int>(type: "integer", nullable: false),
+                    Slot = table.Column<List<int>>(type: "integer[]", nullable: true),
+                    Affinity = table.Column<int>(type: "integer", nullable: false),
+                    DamageRaw = table.Column<int>(type: "integer", nullable: false),
+                    DamageDisplay = table.Column<int>(type: "integer", nullable: false),
+                    ElementType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ElementDamageRaw = table.Column<int>(type: "integer", nullable: true),
+                    ElementDamageDisplay = table.Column<int>(type: "integer", nullable: true),
+                    Elderseal = table.Column<int>(type: "integer", nullable: true),
+                    Phial = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessRed = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessOrange = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessYellow = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessGreen = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessBlue = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessWhite = table.Column<int>(type: "integer", nullable: true),
+                    SharpnessPurple = table.Column<int>(type: "integer", nullable: true),
+                    SwitchAxe_Phial = table.Column<int>(type: "integer", nullable: true),
+                    Coatings = table.Column<List<string>>(type: "text[]", nullable: true),
+                    AmmoId = table.Column<int>(type: "integer", nullable: true),
+                    LightBowgun_AmmoId = table.Column<int>(type: "integer", nullable: true),
+                    SpecialAmmo = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Weapons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Weapons_Ammo_AmmoId",
+                        column: x => x.AmmoId,
+                        principalTable: "Ammo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Weapons_Ammo_LightBowgun_AmmoId",
+                        column: x => x.LightBowgun_AmmoId,
+                        principalTable: "Ammo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CharmRanks",
                 columns: table => new
                 {
@@ -112,8 +178,7 @@ namespace mhwilds_api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Level = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    SkillId = table.Column<int>(type: "integer", nullable: false),
-                    SkillId1 = table.Column<int>(type: "integer", nullable: true)
+                    SkillId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,11 +189,6 @@ namespace mhwilds_api.Migrations
                         principalTable: "Skills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SkillRanks_Skills_SkillId1",
-                        column: x => x.SkillId1,
-                        principalTable: "Skills",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +211,30 @@ namespace mhwilds_api.Migrations
                         name: "FK_ArmourSkillRank_SkillRanks_SkillsId",
                         column: x => x.SkillsId,
                         principalTable: "SkillRanks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BaseWeaponSkillRank",
+                columns: table => new
+                {
+                    BaseWeaponId = table.Column<int>(type: "integer", nullable: false),
+                    SkillsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BaseWeaponSkillRank", x => new { x.BaseWeaponId, x.SkillsId });
+                    table.ForeignKey(
+                        name: "FK_BaseWeaponSkillRank_SkillRanks_SkillsId",
+                        column: x => x.SkillsId,
+                        principalTable: "SkillRanks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BaseWeaponSkillRank_Weapons_BaseWeaponId",
+                        column: x => x.BaseWeaponId,
+                        principalTable: "Weapons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -209,6 +293,11 @@ namespace mhwilds_api.Migrations
                 column: "SkillsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BaseWeaponSkillRank_SkillsId",
+                table: "BaseWeaponSkillRank",
+                column: "SkillsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CharmRanks_CharmId",
                 table: "CharmRanks",
                 column: "CharmId");
@@ -229,9 +318,19 @@ namespace mhwilds_api.Migrations
                 column: "SkillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SkillRanks_SkillId1",
-                table: "SkillRanks",
-                column: "SkillId1");
+                name: "IX_Weapons_AmmoId",
+                table: "Weapons",
+                column: "AmmoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Weapons_LightBowgun_AmmoId",
+                table: "Weapons",
+                column: "LightBowgun_AmmoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Weapons_WeaponType",
+                table: "Weapons",
+                column: "WeaponType");
         }
 
         /// <inheritdoc />
@@ -239,6 +338,9 @@ namespace mhwilds_api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ArmourSkillRank");
+
+            migrationBuilder.DropTable(
+                name: "BaseWeaponSkillRank");
 
             migrationBuilder.DropTable(
                 name: "CharmRankSkillRank");
@@ -250,6 +352,9 @@ namespace mhwilds_api.Migrations
                 name: "Armours");
 
             migrationBuilder.DropTable(
+                name: "Weapons");
+
+            migrationBuilder.DropTable(
                 name: "CharmRanks");
 
             migrationBuilder.DropTable(
@@ -257,6 +362,9 @@ namespace mhwilds_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "SkillRanks");
+
+            migrationBuilder.DropTable(
+                name: "Ammo");
 
             migrationBuilder.DropTable(
                 name: "Charms");

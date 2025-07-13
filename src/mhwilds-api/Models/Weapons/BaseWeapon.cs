@@ -15,7 +15,6 @@ namespace mhwilds_api.Models.Weapons
         public int Affinity { get; set; }
         public Damage Damage { get; set; }
         public Element? Element { get; set; }
-        public int? Elderseal { get; set; }
         public List<SkillRank>? Skills { get; set; }
         [JsonIgnore]
         public string WeaponTypeDisplay => WeaponType.ToDisplayString();

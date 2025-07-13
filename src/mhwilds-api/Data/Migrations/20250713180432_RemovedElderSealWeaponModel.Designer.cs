@@ -12,8 +12,8 @@ using mhwilds_api.Services;
 namespace mhwilds_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250710133953_WeaponModelUpdate")]
-    partial class WeaponModelUpdate
+    [Migration("20250713180432_RemovedElderSealWeaponModel")]
+    partial class RemovedElderSealWeaponModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,21 @@ namespace mhwilds_api.Migrations
                     b.HasIndex("SkillsId");
 
                     b.ToTable("ArmourSkillRank");
+                });
+
+            modelBuilder.Entity("BaseWeaponSkillRank", b =>
+                {
+                    b.Property<int>("BaseWeaponId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SkillsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BaseWeaponId", "SkillsId");
+
+                    b.HasIndex("SkillsId");
+
+                    b.ToTable("BaseWeaponSkillRank", (string)null);
                 });
 
             modelBuilder.Entity("CharmRankSkillRank", b =>
@@ -209,9 +224,6 @@ namespace mhwilds_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BaseWeaponId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -222,8 +234,6 @@ namespace mhwilds_api.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BaseWeaponId");
 
                     b.HasIndex("SkillId");
 
@@ -247,9 +257,6 @@ namespace mhwilds_api.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("Elderseal")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -450,6 +457,21 @@ namespace mhwilds_api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BaseWeaponSkillRank", b =>
+                {
+                    b.HasOne("mhwilds_api.Models.Weapons.BaseWeapon", null)
+                        .WithMany()
+                        .HasForeignKey("BaseWeaponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mhwilds_api.Models.SkillRank", null)
+                        .WithMany()
+                        .HasForeignKey("SkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CharmRankSkillRank", b =>
                 {
                     b.HasOne("mhwilds_api.Models.CharmRank", null)
@@ -526,10 +548,6 @@ namespace mhwilds_api.Migrations
 
             modelBuilder.Entity("mhwilds_api.Models.SkillRank", b =>
                 {
-                    b.HasOne("mhwilds_api.Models.Weapons.BaseWeapon", null)
-                        .WithMany("Skills")
-                        .HasForeignKey("BaseWeaponId");
-
                     b.HasOne("mhwilds_api.Models.Skill", "Skill")
                         .WithMany("Ranks")
                         .HasForeignKey("SkillId")
@@ -1235,11 +1253,6 @@ namespace mhwilds_api.Migrations
             modelBuilder.Entity("mhwilds_api.Models.Skill", b =>
                 {
                     b.Navigation("Ranks");
-                });
-
-            modelBuilder.Entity("mhwilds_api.Models.Weapons.BaseWeapon", b =>
-                {
-                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

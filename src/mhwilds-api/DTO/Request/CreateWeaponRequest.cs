@@ -35,7 +35,6 @@ namespace mhwilds_api.DTO.Request
         public required int Affinity { get; set; }
         public required Damage Damage { get; set; }
         public Element? Element { get; set; }
-        public int? Elderseal { get; set; }
         public List<GetSkillRankResponse>? Skills { get; set; }
     }
 

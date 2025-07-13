@@ -1,6 +1,9 @@
 using mhwilds_api;
 using mhwilds_api.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +23,13 @@ MapsterConfig.Configure();
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
-        options.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+        // remove $type fields
+        options.SerializerSettings.TypeNameHandling = TypeNameHandling.None;        
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+
+        // convert enums to strings
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());     
+        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
     });
 
 var app = builder.Build();
@@ -32,6 +39,7 @@ if (app.Environment.IsDevelopment())
     using IServiceScope scope = app.Services.CreateScope();
     ApplyMigration<ApplicationDbContext>(scope);
 }
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
