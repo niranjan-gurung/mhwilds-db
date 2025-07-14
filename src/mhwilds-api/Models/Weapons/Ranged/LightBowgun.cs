@@ -8,7 +8,7 @@ namespace mhwilds_api.Models.Weapons.Ranged
         {
             WeaponType = WeaponType.LightBowgun;
         }
-        public Ammo Ammo { get; set; }
+        public List<Ammo> Ammo { get; set; }
         public string SpecialAmmo { get; set; }
     }
 }

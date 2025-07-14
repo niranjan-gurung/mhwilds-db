@@ -30,6 +30,7 @@ namespace mhwilds_api.Controllers
                 var weapons = await _context.Weapons
                     .Include(w => w.Skills)
                         .ThenInclude(s => s.Skill)
+                    .Include(w => ((LightBowgun)w).Ammo)
                     .ToListAsync();
 
                 if (weapons.Count == 0)

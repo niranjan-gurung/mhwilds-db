@@ -2,6 +2,7 @@
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace mhwilds_api.DTO.Response
 {
@@ -22,6 +23,7 @@ namespace mhwilds_api.DTO.Response
     [JsonSubtypes.KnownSubType(typeof(GetHeavyBowgunResponse), WeaponType.HeavyBowgun)]
     public abstract class GetWeaponResponse
     {
+        [JsonProperty(Order = 1)]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -106,15 +108,15 @@ namespace mhwilds_api.DTO.Response
 
     public class GetLightBowgunResponse : GetWeaponResponse
     {
-        public List<GetBowgunAmmoResponse> Ammo { get; set; } = new();
+        public List<GetAmmoResponse> Ammo { get; set; } = new();
         public string? SpecialAmmo { get; set; }
         //public int? Deviation { get; set; }
     }
 
     public class GetHeavyBowgunResponse : GetWeaponResponse
     {
-        public List<GetBowgunAmmoResponse> Ammo { get; set; } = new();
-        public string? SpecialAmmo { get; set; }
+        public List<GetAmmoResponse> Ammo { get; set; } = new();
+        //public string? SpecialAmmo { get; set; }
         //public int? Deviation { get; set; }
         //public bool? HasShield { get; set; }
     }
@@ -150,7 +152,7 @@ namespace mhwilds_api.DTO.Response
         public int? Capacity { get; set; }
     }
 
-    public class GetBowgunAmmoResponse
+    public class GetAmmoResponse
     {
         public string Type { get; set; } = string.Empty;
         public int Level { get; set; }

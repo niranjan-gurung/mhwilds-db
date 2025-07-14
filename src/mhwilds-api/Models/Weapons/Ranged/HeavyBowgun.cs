@@ -8,6 +8,6 @@ namespace mhwilds_api.Models.Weapons.Ranged
         {
             WeaponType = WeaponType.HeavyBowgun;
         }
-        public Ammo Ammo { get; set; }
+        public List<Ammo> Ammo { get; set; }
     }
 }

@@ -147,7 +147,24 @@ namespace mhwilds_api.Services
                     });
                 });
 
+            ConfigureRangedWeaponAmmo(modelBuilder);
             ConfigureMeleeWeaponSharpness(modelBuilder);
+        }
+
+        private void ConfigureRangedWeaponAmmo(ModelBuilder modelBuilder)
+        {
+            // configure unique table for each gun type:
+            modelBuilder.Entity<LightBowgun>()
+                .OwnsMany(lgb => lgb.Ammo, ammo =>
+                {
+                    ammo.ToTable("LightBowgunAmmo");
+                });
+
+            modelBuilder.Entity<HeavyBowgun>()
+                .OwnsMany(hgb => hgb.Ammo, ammo =>
+                {
+                    ammo.ToTable("HeavyBowgunAmmo");
+                });
         }
 
         private void ConfigureMeleeWeaponSharpness(ModelBuilder modelBuilder)

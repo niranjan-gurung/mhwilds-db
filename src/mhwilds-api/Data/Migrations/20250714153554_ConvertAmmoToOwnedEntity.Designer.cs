@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using mhwilds_api.Services;
@@ -11,9 +12,11 @@ using mhwilds_api.Services;
 namespace mhwilds_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714153554_ConvertAmmoToOwnedEntity")]
+    partial class ConvertAmmoToOwnedEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1180,76 +1183,74 @@ namespace mhwilds_api.Migrations
 
             modelBuilder.Entity("mhwilds_api.Models.Weapons.Ranged.HeavyBowgun", b =>
                 {
-                    b.OwnsMany("mhwilds_api.Models.Weapons.Common.Ammo", "Ammo", b1 =>
+                    b.OwnsOne("mhwilds_api.Models.Weapons.Common.Ammo", "Ammo", b1 =>
                         {
                             b1.Property<int>("HeavyBowgunId")
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
                             b1.Property<int>("Capacity")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
                             b1.Property<int>("Level")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
                             b1.Property<bool>("Rapid")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("boolean");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("text");
 
-                            b1.HasKey("HeavyBowgunId", "Id");
+                            b1.HasKey("HeavyBowgunId");
 
-                            b1.ToTable("HeavyBowgunAmmo", (string)null);
+                            b1.ToTable("Weapons");
 
                             b1.WithOwner()
                                 .HasForeignKey("HeavyBowgunId");
                         });
 
-                    b.Navigation("Ammo");
+                    b.Navigation("Ammo")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("mhwilds_api.Models.Weapons.Ranged.LightBowgun", b =>
                 {
-                    b.OwnsMany("mhwilds_api.Models.Weapons.Common.Ammo", "Ammo", b1 =>
+                    b.OwnsOne("mhwilds_api.Models.Weapons.Common.Ammo", "Ammo", b1 =>
                         {
                             b1.Property<int>("LightBowgunId")
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
                             b1.Property<int>("Capacity")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
                             b1.Property<int>("Level")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
                             b1.Property<bool>("Rapid")
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("boolean");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("text");
 
-                            b1.HasKey("LightBowgunId", "Id");
+                            b1.HasKey("LightBowgunId");
 
-                            b1.ToTable("LightBowgunAmmo", (string)null);
+                            b1.ToTable("Weapons");
 
                             b1.WithOwner()
                                 .HasForeignKey("LightBowgunId");
                         });
 
-                    b.Navigation("Ammo");
+                    b.Navigation("Ammo")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("mhwilds_api.Models.Charm", b =>

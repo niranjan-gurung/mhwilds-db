@@ -2,6 +2,7 @@
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.Models.Weapons;
+using mhwilds_api.Models.Weapons.Common;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
 
@@ -68,6 +69,9 @@ namespace mhwilds_api
             TypeAdapterConfig<PhialType?, string>
                 .NewConfig()
                 .MapWith(src => src.ToString());
+
+            TypeAdapterConfig<CreateAmmoRequest, Ammo>.NewConfig();
+            TypeAdapterConfig<Ammo, GetAmmoResponse>.NewConfig();
         }
     }
 }

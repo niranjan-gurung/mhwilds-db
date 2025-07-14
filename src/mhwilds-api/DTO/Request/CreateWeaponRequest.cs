@@ -103,7 +103,7 @@ namespace mhwilds_api.DTO.Request
     #region Ranged Weapons
     public class CreateLightBowgunRequest : CreateWeaponRequest
     {
-        public CreateAmmoRequest? Ammo { get; set; }
+        public List<CreateAmmoRequest>? Ammo { get; set; }
 
         [StringLength(50)]
         public string? SpecialAmmo { get; set; }
@@ -111,7 +111,7 @@ namespace mhwilds_api.DTO.Request
 
     public class CreateHeavyBowgunRequest : CreateWeaponRequest
     {
-        public CreateAmmoRequest? Ammo { get; set; }
+        public List<CreateAmmoRequest>? Ammo { get; set; }
     }
 
     public class CreateBowRequest : CreateWeaponRequest
