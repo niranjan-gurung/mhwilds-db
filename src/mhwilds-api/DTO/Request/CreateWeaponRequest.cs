@@ -159,7 +159,7 @@ namespace mhwilds_api.DTO.Request
         [Range(1, 99)]
         public int Capacity { get; set; }
 
-        public bool Rapid { get; set; }
+        public bool? Rapid { get; set; }
     }
     #endregion
 }

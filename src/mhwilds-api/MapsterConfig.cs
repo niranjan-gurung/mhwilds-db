@@ -71,7 +71,8 @@ namespace mhwilds_api
                 .MapWith(src => src.ToString());
 
             TypeAdapterConfig<CreateAmmoRequest, Ammo>.NewConfig();
-            TypeAdapterConfig<Ammo, GetAmmoResponse>.NewConfig();
+            TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig();
+            TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig().Ignore(dest => dest.Rapid);
         }
     }
 }

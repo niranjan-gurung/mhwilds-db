@@ -102,20 +102,20 @@ namespace mhwilds_api.DTO.Response
     #region Ranged Weapons
     public class GetBowResponse : GetWeaponResponse
     {
-        public List<GetBowCoatingResponse> Coatings { get; set; } = new();
+        public List<GetBowCoatingResponse> Coatings { get; set; } = [];
         //public List<GetBowChargeLevelResponse> ChargeLevels { get; set; } = new();
     }
 
     public class GetLightBowgunResponse : GetWeaponResponse
     {
-        public List<GetAmmoResponse> Ammo { get; set; } = new();
+        public List<GetLBGAmmoResponse> Ammo { get; set; } = [];
         public string? SpecialAmmo { get; set; }
         //public int? Deviation { get; set; }
     }
 
     public class GetHeavyBowgunResponse : GetWeaponResponse
     {
-        public List<GetAmmoResponse> Ammo { get; set; } = new();
+        public List<GetHBGAmmoResponse> Ammo { get; set; } = [];
         //public string? SpecialAmmo { get; set; }
         //public int? Deviation { get; set; }
         //public bool? HasShield { get; set; }
@@ -152,12 +152,19 @@ namespace mhwilds_api.DTO.Response
         public int? Capacity { get; set; }
     }
 
-    public class GetAmmoResponse
+    public class GetLBGAmmoResponse
     {
         public string Type { get; set; } = string.Empty;
         public int Level { get; set; }
         public int Capacity { get; set; }
         public bool Rapid { get; set; }
+    }
+    
+    public class GetHBGAmmoResponse
+    {
+        public string Type { get; set; } = string.Empty;
+        public int Level { get; set; }
+        public int Capacity { get; set; }
     }
     #endregion
 }
