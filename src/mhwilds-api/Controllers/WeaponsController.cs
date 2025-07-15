@@ -89,7 +89,24 @@ namespace mhwilds_api.Controllers
                     return NotFound("No weapons found.");
                 }
 
-                var response = weapon.Adapt<GetWeaponResponse>();
+                GetWeaponResponse response = weapon switch
+                {
+                    Greatsword gs => gs.Adapt<GetGreatswordResponse>(),
+                    Longsword ls => ls.Adapt<GetLongswordResponse>(),
+                    DualBlades db => db.Adapt<GetDualBladesResponse>(),
+                    SwordAndShield sns => sns.Adapt<GetSwordAndShieldResponse>(),
+                    Hammer hm => hm.Adapt<GetHammerResponse>(),
+                    HuntingHorn hh => hh.Adapt<GetHuntingHornResponse>(),
+                    Gunlance gl => gl.Adapt<GetGunlanceResponse>(),
+                    Lance lnc => lnc.Adapt<GetLanceResponse>(),
+                    ChargeBlade cb => cb.Adapt<GetChargeBladesResponse>(),
+                    SwitchAxe sa => sa.Adapt<GetSwitchAxeResponse>(),
+                    InsectGlaive ig => ig.Adapt<GetInsectGlaiveResponse>(),
+                    LightBowgun lbg => lbg.Adapt<GetLightBowgunResponse>(),
+                    HeavyBowgun hbg => hbg.Adapt<GetHeavyBowgunResponse>(),
+                    Bow bow => bow.Adapt<GetBowResponse>(),
+                    _ => throw new InvalidOperationException("Unsupported weapon type.")
+                };
                 return Ok(response);
             }
             catch (Exception ex)
@@ -171,6 +188,35 @@ namespace mhwilds_api.Controllers
             {
                 _logger.LogError(ex, "Error occurred while creating weapon of type {WeaponType}", request.WeaponType);
                 throw;
+            }
+        }
+
+        [HttpDelete("{Id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int Id)
+        {
+            try
+            {
+                var weapon = await _context.Weapons
+                    .FirstOrDefaultAsync(w => w.Id == Id);
+
+                if (weapon == null)
+                {
+                    _logger.LogInformation("No weapons found in database");
+                    return NotFound("No weapons found.");
+                }
+
+                _context.Weapons.Remove(weapon);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Successfully deleted weapon with ID {Id} of type {WeaponType}",
+                    Id, weapon.WeaponType);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving all weapons");
+                return StatusCode(500, "An error occurred while deleting the weapon");
             }
         }
     }
