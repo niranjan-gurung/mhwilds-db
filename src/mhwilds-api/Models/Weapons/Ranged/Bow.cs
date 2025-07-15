@@ -1,9 +1,13 @@
-﻿namespace mhwilds_api.Models.Weapons.Ranged;
-public class Bow : BaseWeapon
+﻿using mhwilds_api.Models.Weapons.Types;
+
+namespace mhwilds_api.Models.Weapons.Ranged
 {
-    public Bow()
+    public class Bow : BaseWeapon
     {
-        WeaponType = WeaponType.Bow;
+        public Bow()
+        {
+            WeaponType = WeaponType.Bow;
+        }
+        public List<CoatingType> Coatings { get; set; } = [];
     }
-    public List<string> Coatings { get; set; } = [];
 }

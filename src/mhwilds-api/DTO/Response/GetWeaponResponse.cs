@@ -1,6 +1,6 @@
 ﻿using JsonSubTypes;
-using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
+using mhwilds_api.Models.Weapons.Types;
 using Newtonsoft.Json;
 using System.Text.Json;
 
@@ -67,7 +67,6 @@ namespace mhwilds_api.DTO.Response
     public class GetHuntingHornResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        //public List<GetHornNoteResponse> Notes { get; set; } = new();
     }
 
     public class GetGunlanceResponse : GetWeaponResponse
@@ -95,30 +94,24 @@ namespace mhwilds_api.DTO.Response
     public class GetInsectGlaiveResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        //public string? KinsectBonusType { get; set; }
     }
     #endregion
 
     #region Ranged Weapons
     public class GetBowResponse : GetWeaponResponse
     {
-        public List<GetBowCoatingResponse> Coatings { get; set; } = [];
-        //public List<GetBowChargeLevelResponse> ChargeLevels { get; set; } = new();
+        public List<string> Coatings { get; set; } = [];
     }
 
     public class GetLightBowgunResponse : GetWeaponResponse
     {
         public List<GetLBGAmmoResponse> Ammo { get; set; } = [];
         public string? SpecialAmmo { get; set; }
-        //public int? Deviation { get; set; }
     }
 
     public class GetHeavyBowgunResponse : GetWeaponResponse
     {
         public List<GetHBGAmmoResponse> Ammo { get; set; } = [];
-        //public string? SpecialAmmo { get; set; }
-        //public int? Deviation { get; set; }
-        //public bool? HasShield { get; set; }
     }
     #endregion
 
@@ -146,11 +139,11 @@ namespace mhwilds_api.DTO.Response
         public int Purple { get; set; }
     }
 
-    public class GetBowCoatingResponse
-    {
-        public string Type { get; set; } = string.Empty;
-        public int? Capacity { get; set; }
-    }
+    //public class GetBowCoatingResponse
+    //{
+    //    public string Type { get; set; } = string.Empty;
+    //    public int? Capacity { get; set; }
+    //}
 
     public class GetLBGAmmoResponse
     {

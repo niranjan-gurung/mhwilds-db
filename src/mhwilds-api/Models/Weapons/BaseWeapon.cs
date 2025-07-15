@@ -1,4 +1,5 @@
 ﻿using mhwilds_api.Models.Weapons.Common;
+using mhwilds_api.Models.Weapons.Types;
 using Newtonsoft.Json;
 
 namespace mhwilds_api.Models.Weapons

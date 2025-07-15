@@ -5,6 +5,7 @@ using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
+using mhwilds_api.Models.Weapons.Types;
 
 namespace mhwilds_api
 {
@@ -66,13 +67,17 @@ namespace mhwilds_api
         private static void ConfigureCommonMappings()
         {
             // configure enum mappings
-            TypeAdapterConfig<PhialType?, string>
+            TypeAdapterConfig<PhialType, string>
+                .NewConfig()
+                .MapWith(src => src.ToString());
+
+            TypeAdapterConfig<CoatingType, string>
                 .NewConfig()
                 .MapWith(src => src.ToString());
 
             TypeAdapterConfig<CreateAmmoRequest, Ammo>.NewConfig();
             TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig();
-            TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig().Ignore(dest => dest.Rapid);
+            TypeAdapterConfig<Ammo, GetHBGAmmoResponse>.NewConfig();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using JsonSubTypes;
 using mhwilds_api.DTO.Response;
-using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
+using mhwilds_api.Models.Weapons.Types;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
@@ -105,7 +105,7 @@ namespace mhwilds_api.DTO.Request
     {
         public List<CreateAmmoRequest>? Ammo { get; set; }
 
-        [StringLength(50)]
+        [StringLength(20)]
         public string? SpecialAmmo { get; set; }
     }
 

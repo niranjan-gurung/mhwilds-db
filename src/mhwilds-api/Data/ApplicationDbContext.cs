@@ -3,7 +3,10 @@ using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
+using mhwilds_api.Models.Weapons.Types;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace mhwilds_api.Services
 {
@@ -27,12 +30,14 @@ namespace mhwilds_api.Services
             base.OnModelCreating(modelBuilder);
 
             /* relationships */
-            // setup:
             // armours, skills/skillranks, charms, decorations
             ConfigureGeneralEntityModels(modelBuilder);
-            // setup:
+            
             // weapons specifics - base, ranged, melee
             ConfigureWeaponInheritance(modelBuilder);
+
+            // convert coating types to string to store in db
+            ConfigureBowCoatings(modelBuilder);
         }
 
         private void ConfigureGeneralEntityModels(ModelBuilder modelBuilder)
@@ -201,6 +206,25 @@ namespace mhwilds_api.Services
                         sharpness.Property("Purple").HasColumnName("SharpnessPurple");
                     });
             }
+        }
+
+        private void ConfigureBowCoatings(ModelBuilder modelBuilder)
+        {
+            var converter = new ValueConverter<List<CoatingType>, string[]>(
+                v => v.Select(e => e.ToString()).ToArray(),
+                v => v.Select(e => Enum.Parse<CoatingType>(e)).ToList()
+            );
+
+            var comparer = new ValueComparer<List<CoatingType>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            );
+
+            modelBuilder.Entity<Bow>()
+                .Property(b => b.Coatings)
+                .HasConversion(converter)
+                .Metadata.SetValueComparer(comparer);
         }
     }
 }
