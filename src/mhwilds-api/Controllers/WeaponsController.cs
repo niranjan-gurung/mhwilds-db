@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.Interfaces;
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
@@ -14,11 +15,14 @@ namespace mhwilds_api.Controllers
     [Route("api/weapons")]
     public class WeaponsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IWeaponService _weaponService;
         private readonly ILogger<WeaponsController> _logger;
-        public WeaponsController(ApplicationDbContext context, ILogger<WeaponsController> logger)
+
+        public WeaponsController(
+            IWeaponService weaponService,
+            ILogger<WeaponsController> logger)
         {
-            _context = context;
+            _weaponService = weaponService;
             _logger = logger;
         }
 
@@ -27,92 +31,40 @@ namespace mhwilds_api.Controllers
         {
             try
             {
-                var weapons = await _context.Weapons
-                    .Include(w => w.Skills)
-                        .ThenInclude(s => s.Skill)
-                    .Include(w => ((LightBowgun)w).Ammo)
-                    .ToListAsync();
+                var weapons = await _weaponService.GetAllAsync();
 
                 if (weapons.Count == 0)
                 {
-                    _logger.LogInformation("No weapons found in database");
                     return NotFound("No weapons found.");
                 }
-
-                var response = new List<GetWeaponResponse>();
-
-                foreach (var weapon in weapons)
-                {
-                    GetWeaponResponse weaponResponse = weapon switch
-                    {
-                        Greatsword gs => gs.Adapt<GetGreatswordResponse>(),
-                        Longsword ls => ls.Adapt<GetLongswordResponse>(),
-                        DualBlades db => db.Adapt<GetDualBladesResponse>(),
-                        SwordAndShield sns => sns.Adapt<GetSwordAndShieldResponse>(),
-                        Hammer hm => hm.Adapt<GetHammerResponse>(),
-                        HuntingHorn hh => hh.Adapt<GetHuntingHornResponse>(),
-                        Gunlance gl => gl.Adapt<GetGunlanceResponse>(),
-                        Lance lnc => lnc.Adapt<GetLanceResponse>(),
-                        ChargeBlade cb => cb.Adapt<GetChargeBladesResponse>(),
-                        SwitchAxe sa => sa.Adapt<GetSwitchAxeResponse>(),
-                        InsectGlaive ig => ig.Adapt<GetInsectGlaiveResponse>(),
-                        LightBowgun lbg => lbg.Adapt<GetLightBowgunResponse>(),
-                        HeavyBowgun hbg => hbg.Adapt<GetHeavyBowgunResponse>(),
-                        Bow bow => bow.Adapt<GetBowResponse>(),
-                        _ => throw new InvalidOperationException("Unsupported weapon type.")
-                    };
-                    response.Add(weaponResponse);
-                }
-
-                return Ok(response);
+                
+                return Ok(weapons);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while retrieving all weapons");
-                throw;
+                return StatusCode(500, "An error occurred while retrieving weapons");
             }
         }
 
-        [HttpGet("{Id:int}")]
-        public async Task<ActionResult<GetWeaponResponse>> Get([FromRoute] int Id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetWeaponResponse>> Get([FromRoute] int id)
         {
             try
             {
-                var weapon = await _context.Weapons
-                    .Include(w => w.Skills)
-                        .ThenInclude(s => s.Skill)
-                    .FirstOrDefaultAsync(w => w.Id == Id);
+                var weapon = await _weaponService.GetByIdAsync(id);
 
                 if (weapon == null)
                 {
-                    _logger.LogInformation("No weapons found in database");
-                    return NotFound("No weapons found.");
+                    return NotFound($"No weapons found with ID: {id}.");
                 }
 
-                GetWeaponResponse response = weapon switch
-                {
-                    Greatsword gs => gs.Adapt<GetGreatswordResponse>(),
-                    Longsword ls => ls.Adapt<GetLongswordResponse>(),
-                    DualBlades db => db.Adapt<GetDualBladesResponse>(),
-                    SwordAndShield sns => sns.Adapt<GetSwordAndShieldResponse>(),
-                    Hammer hm => hm.Adapt<GetHammerResponse>(),
-                    HuntingHorn hh => hh.Adapt<GetHuntingHornResponse>(),
-                    Gunlance gl => gl.Adapt<GetGunlanceResponse>(),
-                    Lance lnc => lnc.Adapt<GetLanceResponse>(),
-                    ChargeBlade cb => cb.Adapt<GetChargeBladesResponse>(),
-                    SwitchAxe sa => sa.Adapt<GetSwitchAxeResponse>(),
-                    InsectGlaive ig => ig.Adapt<GetInsectGlaiveResponse>(),
-                    LightBowgun lbg => lbg.Adapt<GetLightBowgunResponse>(),
-                    HeavyBowgun hbg => hbg.Adapt<GetHeavyBowgunResponse>(),
-                    Bow bow => bow.Adapt<GetBowResponse>(),
-                    _ => throw new InvalidOperationException("Unsupported weapon type.")
-                };
-                return Ok(response);
+                return Ok(weapon);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving all weapons");
-                throw;
+                _logger.LogError(ex, "Error occurred while retrieving weapon with ID: {id}", id);
+                return StatusCode(500, "An error occurred while retrieving weapon");
             }
         }
 
@@ -126,96 +78,58 @@ namespace mhwilds_api.Controllers
 
             try
             {
-                // mapster automatically maps to the correct weapon type based on the request
-                BaseWeapon weapon = request switch
-                {
-                    CreateGreatswordRequest gs => gs.Adapt<Greatsword>(),
-                    CreateLongswordRequest ls => ls.Adapt<Longsword>(),
-                    CreateDualBladesRequest db => db.Adapt<DualBlades>(),
-                    CreateSwordAndShieldRequest sns => sns.Adapt<SwordAndShield>(),
-                    CreateHammerRequest hm => hm.Adapt<Hammer>(),
-                    CreateHuntingHornRequest hh => hh.Adapt<HuntingHorn>(),
-                    CreateGunlanceRequest gl => gl.Adapt<Gunlance>(),
-                    CreateLanceRequest lnc => lnc.Adapt<Lance>(),
-                    CreateChargeBladesRequest cb => cb.Adapt<ChargeBlade>(),
-                    CreateSwitchAxeRequest sa => sa.Adapt<SwitchAxe>(),
-                    CreateInsectGlaiveRequest ig => ig.Adapt<InsectGlaive>(),
-                    CreateLightBowgunRequest lbg => lbg.Adapt<LightBowgun>(),
-                    CreateHeavyBowgunRequest hbg => hbg.Adapt<HeavyBowgun>(),
-                    CreateBowRequest bow => bow.Adapt<Bow>(),
-                    _ => throw new InvalidOperationException("Unsupported weapon type.")
-                };
-
-                // handle skills relationship if present
-                if (request.Skills?.Count != 0)
-                {
-                    var skillRankIds = request.Skills?.Select(s => s.Id).ToList();
-                    var skillRanks = await _context.SkillRanks
-                        .Where(sr => skillRankIds.Contains(sr.Id))
-                        .Include(sr => sr.Skill)
-                        .ToListAsync();
-
-                    weapon.Skills = skillRanks;
-                }
-
-                _context.Weapons.Add(weapon);
-                await _context.SaveChangesAsync();
-
-                // Mapster automatically maps to the correct response type
-                GetWeaponResponse response = weapon switch
-                {
-                    Greatsword gs => gs.Adapt<GetGreatswordResponse>(),
-                    Longsword ls => ls.Adapt<GetLongswordResponse>(),
-                    DualBlades db => db.Adapt<GetDualBladesResponse>(),
-                    SwordAndShield sns => sns.Adapt<GetSwordAndShieldResponse>(),
-                    Hammer hm => hm.Adapt<GetHammerResponse>(),
-                    HuntingHorn hh => hh.Adapt<GetHuntingHornResponse>(),
-                    Gunlance gl => gl.Adapt<GetGunlanceResponse>(),
-                    Lance lnc => lnc.Adapt<GetLanceResponse>(),
-                    ChargeBlade cb => cb.Adapt<GetChargeBladesResponse>(),
-                    SwitchAxe sa => sa.Adapt<GetSwitchAxeResponse>(),
-                    InsectGlaive ig => ig.Adapt<GetInsectGlaiveResponse>(),
-                    LightBowgun lbg => lbg.Adapt<GetLightBowgunResponse>(),
-                    HeavyBowgun hbg => hbg.Adapt<GetHeavyBowgunResponse>(),
-                    Bow bow => bow.Adapt<GetBowResponse>(),
-                    _ => throw new InvalidOperationException($"Unsupported weapon type: {weapon.GetType().Name}")
-                };
-
-                _logger.LogInformation("Created new weapon with ID {Id} of type {WeaponType}", weapon.Id, weapon.WeaponType);
-                return Created("api/weapons", response);
+                var response = await _weaponService.CreateAsync(request);
+                return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating weapon of type {WeaponType}", request.WeaponType);
-                throw;
+                return StatusCode(500, "An error occurred while creating weapon");
             }
         }
 
-        [HttpDelete("{Id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int Id)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GetWeaponResponse>> Update([FromRoute] int id, [FromBody] CreateWeaponRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _weaponService.UpdateAsync(id, request);
+
+                _logger.LogInformation("Updated weapon with ID {Id}", id);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating weapon with ID {Id}", id);
+                return StatusCode(500, "An error occurred while updating weapon");
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                var weapon = await _context.Weapons
-                    .FirstOrDefaultAsync(w => w.Id == Id);
-
-                if (weapon == null)
+                var deleted = await _weaponService.DeleteAsync(id);
+                if (!deleted)
                 {
-                    _logger.LogInformation("No weapons found in database");
-                    return NotFound("No weapons found.");
+                    return NotFound($"Weapon with ID {id} not found");
                 }
-
-                _context.Weapons.Remove(weapon);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Successfully deleted weapon with ID {Id} of type {WeaponType}",
-                    Id, weapon.WeaponType);
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving all weapons");
+                _logger.LogError(ex, "Error occurred while deleting weapon with ID {Id}", id);
                 return StatusCode(500, "An error occurred while deleting the weapon");
             }
         }

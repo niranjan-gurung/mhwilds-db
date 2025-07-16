@@ -139,12 +139,6 @@ namespace mhwilds_api.DTO.Response
         public int Purple { get; set; }
     }
 
-    //public class GetBowCoatingResponse
-    //{
-    //    public string Type { get; set; } = string.Empty;
-    //    public int? Capacity { get; set; }
-    //}
-
     public class GetLBGAmmoResponse
     {
         public string Type { get; set; } = string.Empty;

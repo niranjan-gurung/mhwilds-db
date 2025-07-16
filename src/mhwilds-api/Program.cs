@@ -1,4 +1,6 @@
 using mhwilds_api;
+using mhwilds_api.Interfaces;
+using mhwilds_api.Repository;
 using mhwilds_api.Services;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -16,6 +18,17 @@ var connectionString = builder.Configuration.GetConnectionString("Database")
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
+
+// repository layer:
+// register weapon repository
+builder.Services.AddScoped<IWeaponRepository, WeaponRepository>();
+
+// service layer:
+// register weapon service
+// this is an extension to the weapon repository,
+// it handles error checking and any additional functionalities that,
+// is inappropriate for weapon repository.
+builder.Services.AddScoped<IWeaponService, WeaponService>();
 
 // setup mapster
 MapsterConfig.Configure();
