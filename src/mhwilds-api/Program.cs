@@ -20,15 +20,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 // repository layer:
-// register weapon repository
 builder.Services.AddScoped<IWeaponRepository, WeaponRepository>();
+builder.Services.AddScoped<IArmourRepository, ArmourRepository>();
 
 // service layer:
-// register weapon service
-// this is an extension to the weapon repository,
+// this is an extension to the Irepository factories,
 // it handles error checking and any additional functionalities that,
-// is inappropriate for weapon repository.
+// is inappropriate for repository models.
 builder.Services.AddScoped<IWeaponService, WeaponService>();
+builder.Services.AddScoped<IArmourService, ArmourService>();
 
 // setup mapster
 MapsterConfig.Configure();

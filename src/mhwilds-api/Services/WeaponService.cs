@@ -33,7 +33,7 @@ namespace mhwilds_api.Services
             if (weapons.Count == 0)
             {
                 _logger.LogInformation("No weapons found in database");
-                return new List<GetWeaponResponse>();
+                return [];
             }
 
             var response = new List<GetWeaponResponse>();
@@ -53,7 +53,7 @@ namespace mhwilds_api.Services
 
             if (weapon == null)
             {
-                _logger.LogInformation("No weapons found in database");
+                _logger.LogInformation("No weapon found in database");
                 return null;
             }
 

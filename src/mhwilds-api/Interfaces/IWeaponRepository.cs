@@ -1,5 +1,4 @@
-﻿using mhwilds_api.DTO.Response;
-using mhwilds_api.Models.Weapons;
+﻿using mhwilds_api.Models.Weapons;
 
 namespace mhwilds_api.Interfaces
 {
