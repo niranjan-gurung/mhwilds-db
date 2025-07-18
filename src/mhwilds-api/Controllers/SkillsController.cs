@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.Interfaces;
 
 namespace mhwilds_api.Controllers
 {
@@ -12,69 +13,91 @@ namespace mhwilds_api.Controllers
     [Route("api/skills")]
     public class SkillsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public SkillsController(ApplicationDbContext context)
+        private readonly ISkillService _skillService;
+        private readonly ILogger<SkillsController> _logger;
+        public SkillsController(
+            ISkillService skillService,
+            ILogger<SkillsController> logger)
         {
-            _context = context;
+            _skillService = skillService;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<GetSkillResponse>>> GetAll()
         {
-            var skills = await _context.Skills
-                .Include(s => s.Ranks)
-                .ToListAsync();
-
-            if (skills == null || skills.Count == 0)
-                return BadRequest("No skills found.");
-
-            var responses = skills.Adapt<List<GetSkillResponse>>();
-            return Ok(responses);
+            try
+            {
+                var skills = await _skillService.GetAllAsync();
+                return Ok(skills);      // returns 200 with empty array []
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving all skills");
+                return StatusCode(500, "An error occurred while retrieving skills");
+            }
         }
 
-        [HttpGet("{Id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int Id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetSkillResponse>> Get([FromRoute] int id)
         {
-            var skill = await _context.Skills
-                .Include(s => s.Ranks)
-                .FirstOrDefaultAsync(s => s.Id == Id);
+            try
+            {
+                var skill = await _skillService.GetByIdAsync(id);
 
-            if (skill == null)
-                return NotFound();
+                if (skill == null)
+                {
+                    return NotFound($"No skill found with ID: {id}.");
+                }
 
-            var response = skill.Adapt<GetSkillResponse>();
-
-            return Ok(response);
+                return Ok(skill);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving skill with ID: {id}", id);
+                return StatusCode(500, "An error occurred while retrieving skill");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] List<CreateSkillRequest> skills)
+        public async Task<ActionResult<List<GetSkillResponse>>> Create([FromBody] List<SkillRequest> requests)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
-            var request = skills.Adapt<List<Skill>>();
-
-            _context.Skills.AddRange(request);
-            await _context.SaveChangesAsync();
-
-            var response = request.Adapt<List<GetSkillResponse>>();
-
-            // return 201 response, location: /api/skills
-            return Created("api/skills", response);
+            try
+            {
+                var response = await _skillService.CreateRangeAsync(requests);
+                return CreatedAtAction(nameof(GetAll), response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating skills");
+                return StatusCode(500, "An error occurred while creating skills");
+            }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int Id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var skill = await _context.Skills.FindAsync(Id);
-            if (skill == null)
-                return NotFound();
+            try
+            {
+                var deleted = await _skillService.DeleteAsync(id);
 
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
+                if (!deleted)
+                {
+                    return NotFound($"Skill with ID: {id} not found");
+                }
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting skill with ID: {id}", id);
+                return StatusCode(500, "An error occurred while deleting skill");
+            }
         }
     }
 }

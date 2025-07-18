@@ -22,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // repository layer:
 builder.Services.AddScoped<IWeaponRepository, WeaponRepository>();
 builder.Services.AddScoped<IArmourRepository, ArmourRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 
 // service layer:
 // this is an extension to the Irepository factories,
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IArmourRepository, ArmourRepository>();
 // is inappropriate for repository models.
 builder.Services.AddScoped<IWeaponService, WeaponService>();
 builder.Services.AddScoped<IArmourService, ArmourService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 
 // setup mapster
 MapsterConfig.Configure();

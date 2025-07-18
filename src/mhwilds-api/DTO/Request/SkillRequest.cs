@@ -1,6 +1,6 @@
 ﻿namespace mhwilds_api.DTO.Request
 {
-    public class CreateSkillRequest
+    public class SkillRequest
     {
         public required string Name { get; set; }
         public required string Type { get; set; }

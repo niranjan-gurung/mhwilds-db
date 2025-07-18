@@ -51,7 +51,7 @@ namespace mhwilds_api.Services
             return armour.Adapt<GetArmourResponse>();
         }
 
-        public async Task<List<GetArmourResponse>> CreateRangeAsync(List<CreateArmourRequest> requests)
+        public async Task<List<GetArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests)
         {
             var armours = requests.Adapt<List<Armour>>();
 
@@ -61,7 +61,7 @@ namespace mhwilds_api.Services
                 var request = requests[i];
                 var armour = armours[i];
 
-                await HandleSkillAssignment(armour, request.Skills);
+                await HandleSkillAssignment(armour, request);
             }
 
             var createdArmours = await _armourRepository.CreateRangeAsync(armours);
@@ -71,7 +71,7 @@ namespace mhwilds_api.Services
             return createdArmours.Adapt<List<GetArmourResponse>>();
         }
 
-        public async Task<GetArmourResponse> UpdateAsync(int id, UpdateArmourRequest request)
+        public async Task<GetArmourResponse> UpdateAsync(int id, ArmourRequest request)
         {
             var existingArmour = await _armourRepository.GetByIdAsync(id);
 
@@ -83,7 +83,7 @@ namespace mhwilds_api.Services
             var armour = request.Adapt<Armour>();
             armour.Id = id;
 
-            await HandleSkillAssignment(armour, request.Skills);
+            await HandleSkillAssignment(armour, request);
 
             var updatedArmour = await _armourRepository.UpdateAsync(armour);
 
@@ -107,11 +107,11 @@ namespace mhwilds_api.Services
             return deleted;
         }
 
-        private async Task HandleSkillAssignment(Armour armour, List<GetSkillRankResponse>? skills)
+        private async Task HandleSkillAssignment(Armour armour, ArmourRequest request)
         {
-            if (skills?.Count > 0)
+            if (request.Skills?.Count > 0)
             {
-                var skillRankIds = skills
+                var skillRankIds = request.Skills
                     .Select(sr => sr.Id).ToList();
 
                 var skillRanks = await _context.SkillRanks

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace mhwilds_api.DTO.Request
 {
-    public class UpdateArmourRequest
+    public class ArmourRequest
     {
         public required string Name { get; set; }
         public string? Slug { get; set; }

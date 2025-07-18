@@ -32,12 +32,6 @@ namespace mhwilds_api.Controllers
             try
             {
                 var weapons = await _weaponService.GetAllAsync();
-
-                if (weapons.Count == 0)
-                {
-                    return NotFound("No weapons found.");
-                }
-                
                 return Ok(weapons);
             }
             catch (Exception ex)
@@ -56,7 +50,7 @@ namespace mhwilds_api.Controllers
 
                 if (weapon == null)
                 {
-                    return NotFound($"No weapons found with ID: {id}.");
+                    return NotFound($"No weapon found with ID: {id}.");
                 }
 
                 return Ok(weapon);
@@ -99,8 +93,6 @@ namespace mhwilds_api.Controllers
             try
             {
                 var response = await _weaponService.UpdateAsync(id, request);
-
-                _logger.LogInformation("Updated weapon with ID {Id}", id);
                 return Ok(response);
             }
             catch (InvalidOperationException ex)
@@ -120,6 +112,7 @@ namespace mhwilds_api.Controllers
             try
             {
                 var deleted = await _weaponService.DeleteAsync(id);
+
                 if (!deleted)
                 {
                     return NotFound($"Weapon with ID {id} not found");

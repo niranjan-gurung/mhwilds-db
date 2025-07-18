@@ -8,8 +8,8 @@ namespace mhwilds_api.Interfaces
     {
         Task<List<GetArmourResponse>> GetAllAsync();
         Task<GetArmourResponse?> GetByIdAsync(int id);
-        Task<List<GetArmourResponse>> CreateRangeAsync(List<CreateArmourRequest> requests);
-        Task<GetArmourResponse> UpdateAsync(int id, UpdateArmourRequest request);
+        Task<List<GetArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests);
+        Task<GetArmourResponse> UpdateAsync(int id, ArmourRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

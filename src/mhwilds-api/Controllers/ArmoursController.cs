@@ -1,13 +1,7 @@
-﻿using Mapster;
-using mhwilds_api.DTO.Request;
+﻿using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.Interfaces;
-using mhwilds_api.Models;
-using mhwilds_api.Services;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace mhwilds_api.Controllers
 {
@@ -31,18 +25,12 @@ namespace mhwilds_api.Controllers
             try
             {
                 var armours = await _armourService.GetAllAsync();
-
-                if (armours.Count == 0)
-                {
-                    return BadRequest("No armours found.");
-                }
-
                 return Ok(armours);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while retrieving all armours");
-                return StatusCode(500, "An error occurred while retrieving armour");
+                return StatusCode(500, "An error occurred while retrieving armours");
             }
         }
 
@@ -68,7 +56,7 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<GetArmourResponse>>> Create([FromBody] List<CreateArmourRequest> requests)
+        public async Task<ActionResult<List<GetArmourResponse>>> Create([FromBody] List<ArmourRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -82,14 +70,14 @@ namespace mhwilds_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating armour");
-                return StatusCode(500, "An error occurred while creating armour");
+                _logger.LogError(ex, "Error occurred while creating armours");
+                return StatusCode(500, "An error occurred while creating armours");
             }
 
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetArmourResponse>> Update([FromRoute] int id, [FromBody] UpdateArmourRequest request)
+        public async Task<ActionResult<GetArmourResponse>> Update([FromRoute] int id, [FromBody] ArmourRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +95,7 @@ namespace mhwilds_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while patching armour with ID {Id}", id);
+                _logger.LogError(ex, "Error occurred while updating armour with ID {Id}", id);
                 return StatusCode(500, "An error occurred while updating the armour");
             }
         }
