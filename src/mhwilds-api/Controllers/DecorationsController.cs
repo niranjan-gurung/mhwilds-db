@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.Interfaces;
 using mhwilds_api.Models;
 using mhwilds_api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,91 +13,115 @@ namespace mhwilds_api.Controllers
     [Route("api/decorations")]
     public class DecorationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public DecorationsController(ApplicationDbContext context)
+        private readonly IDecorationService _decorationService;
+        private readonly ILogger<DecorationsController> _logger;
+        public DecorationsController(
+            IDecorationService decorationService,
+            ILogger<DecorationsController> logger)
         {
-            _context = context;
+            _decorationService = decorationService;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<GetDecorationResponse>>> GetAll()
         {
-            var decorations = await _context.Decorations
-                .Include(s => s.Skills)
-                    .ThenInclude(sr => sr.Skill)
-                .ToListAsync();
-
-            if (decorations == null || decorations.Count == 0)
-                return BadRequest("No decoration found.");
-
-            var response = decorations.Adapt<List<GetDeorationResponse>>();
-
-            return Ok(response);
+            try
+            {
+                var decorations = await _decorationService.GetAllAsync();
+                return Ok(decorations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving all decorations");
+                return StatusCode(500, "An error occurred while retrieving decorations");
+            }
         }
 
-        [HttpGet("{Id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int Id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetDecorationResponse>> Get([FromRoute] int id)
         {
-            var decoration = await _context.Decorations
-                .Include(s => s.Skills)
-                    .ThenInclude(sr => sr.Skill)
-                .FirstOrDefaultAsync(d => d.Id == Id);
+            try
+            {
+                var decoration = await _decorationService.GetByIdAsync(id);
 
-            if (decoration == null)
-                return NotFound();
+                if (decoration == null)
+                {
+                    return NotFound($"No decoration found with ID: {id}.");
+                }
 
-            var response = decoration.Adapt<GetDeorationResponse>();
-
-            return Ok(response);
+                return Ok(decoration);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving decoration with ID: {id}", id);
+                return StatusCode(500, "An error occurred while retrieving decoration");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] List<CreateDecorationRequest> decorations)
+        public async Task<ActionResult<List<GetDecorationResponse>>> Create([FromBody] List<DecorationRequest> requests)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var request = decorations.Adapt<List<Decoration>>();
-
-            for (int i = 0; i < request.Count; i++)
             {
-                var dto = decorations[i];
-                var deco = request[i];
-
-                var skillRankIds = dto.Skills
-                    .Select(sr => sr.Id)
-                    .ToList();
-
-                if (skillRankIds.Count > 0)
-                {
-                    var skillRanks = await _context.SkillRanks
-                        .Where(sr => skillRankIds.Contains(sr.Id))
-                        .ToListAsync();
-
-                    deco.Skills = skillRanks;
-                }
+                return BadRequest(ModelState);
             }
 
-            _context.Decorations.AddRange(request);
-            await _context.SaveChangesAsync();
-
-            var response = request.Adapt<List<GetDeorationResponse>>();
-
-            // return 201 response, location: /api/decorations
-            return Created("api/decorations", response);
+            try
+            {
+                var response = await _decorationService.CreateRangeAsync(requests);
+                return CreatedAtAction(nameof(GetAll), response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating decorations");
+                return StatusCode(500, "An error occurred while creating decorations");
+            }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int Id)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GetDecorationResponse>> Update([FromRoute] int id, [FromBody] DecorationRequest request)
         {
-            var deco = await _context.Decorations.FindAsync(Id);
-            if (deco == null)
-                return NotFound();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            _context.Decorations.Remove(deco);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var response = await _decorationService.UpdateAsync(id, request);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating decoration with ID: {Id}", id);
+                return StatusCode(500, "An error occurred while updating the decoration");
+            }
+        }
 
-            return NoContent();
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var deleted = await _decorationService.DeleteAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound($"Decoration with ID: {id} not found");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting decoration with ID: {id}", id);
+                return StatusCode(500, "An error occurred while deleting decoration");
+            }
         }
     }
 }

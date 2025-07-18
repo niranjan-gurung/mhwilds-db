@@ -2,7 +2,7 @@
 
 namespace mhwilds_api.DTO.Response
 {
-    public class GetDeorationResponse
+    public class GetDecorationResponse
     {
         public int Id { get; set; }
         public string? Name { get; set; }

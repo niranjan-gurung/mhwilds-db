@@ -24,6 +24,7 @@ builder.Services.AddScoped<IWeaponRepository, WeaponRepository>();
 builder.Services.AddScoped<IArmourRepository, ArmourRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<ICharmRepository, CharmRepository>();
+builder.Services.AddScoped<IDecorationRepository, DecorationRepository>();
 
 // service layer:
 // this is an extension to the Irepository factories,
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IWeaponService, WeaponService>();
 builder.Services.AddScoped<IArmourService, ArmourService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ICharmService, CharmService>();
+builder.Services.AddScoped<IDecorationService, DecorationService>();
 
 // setup mapster
 MapsterConfig.Configure();

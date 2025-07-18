@@ -3,7 +3,7 @@ using mhwilds_api.Models;
 
 namespace mhwilds_api.DTO.Request
 {
-    public class CreateDecorationRequest
+    public class DecorationRequest
     {
         public required string Name { get; set; }
         public required string Description { get; set; }
