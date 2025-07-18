@@ -2,7 +2,7 @@
 
 namespace mhwilds_api.DTO.Request
 {
-    public class CreateCharmRequest
+    public class CharmRequest
     {
         public required string Name { get; set; }
         public required List<CreateCharmRankRequest> Ranks { get; set; } = [];

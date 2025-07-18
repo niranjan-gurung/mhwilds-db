@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.DTO.Request;
+using mhwilds_api.Interfaces;
 
 namespace mhwilds_api.Controllers
 {
@@ -12,84 +13,116 @@ namespace mhwilds_api.Controllers
     [Route("api/charms")]
     public class CharmsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICharmService _charmService;
+        private readonly ILogger<CharmsController> _logger;
 
-        public CharmsController(ApplicationDbContext context)
+        public CharmsController(
+            ICharmService charmService,
+            ILogger<CharmsController> logger)
         {
-            _context = context;
+            _charmService = charmService;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<GetCharmResponse>>> GetAll()
         {
-            var charms = await _context.Charms
-                .Include(c => c.Ranks)
-                    .ThenInclude(r => r.Skills)
-                        .ThenInclude(s => s.Skill)
-                .ToListAsync();
-
-            if (charms == null || charms.Count == 0)
-                return BadRequest("No charms found.");
-
-            var response = charms.Adapt<List<GetCharmResponse>>();
-
-            return Ok(response);
+            try
+            {
+                var charms = await _charmService.GetAllAsync();
+                return Ok(charms);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving all charms");
+                return StatusCode(500, "An error occurred while retrieving charms");
+            }
         }
 
-        [HttpGet("{Id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int Id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetCharmResponse>> Get([FromRoute] int id)
         {
-            var charm = await _context.Charms
-                .Include(c => c.Ranks)
-                    .ThenInclude(r => r.Skills)
-                        .ThenInclude(s => s.Skill)
-                .FirstOrDefaultAsync(c => c.Id == Id);
+            try
+            {
+                var charm = await _charmService.GetByIdAsync(id);
 
-            if (charm == null)
-                return NotFound();
+                if (charm == null)
+                {
+                    return NotFound($"No charm found with ID: {id}.");
+                }
 
-            var response = charm.Adapt<GetCharmResponse>();
-
-            return Ok(response);
+                return Ok(charm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving charm with ID: {id}", id);
+                return StatusCode(500, "An error occurred while retrieving charm");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] List<CreateCharmRequest> charms)
+        public async Task<ActionResult<List<GetCharmResponse>>> Create([FromBody] List<CharmRequest> requests)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var request = charms.Adapt<List<Charm>>();
-
-            for (int i = 0; i < request.Count; i++)
             {
-                var dto = charms[i];
-                var charm = request[i];
-
-                for (int j = 0; j < charm.Ranks.Count; j++)
-                {
-                    var skillRankIds = dto.Ranks[j].Skills?
-                        .Select(sr => sr.Id)
-                        .ToList();
-
-                    if (skillRankIds?.Count > 0)
-                    {
-                        var skillRanks = await _context.SkillRanks
-                            .Where(sr => skillRankIds.Contains(sr.Id))
-                            .Include(sr => sr.Skill)
-                            .ToListAsync();
-
-                        charm.Ranks[j].Skills = skillRanks;
-                    }
-                }
+                return BadRequest(ModelState);
             }
-            
-            _context.Charms.AddRange(request);
-            await _context.SaveChangesAsync();
 
-            var response = charms.Adapt<List<GetCharmResponse>>();
+            try
+            {
+                var response = await _charmService.CreateRangeAsync(requests);
+                return CreatedAtAction(nameof(GetAll), response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating charms");
+                return StatusCode(500, "An error occurred while creating charms");
+            }
+        }
 
-            return Created("api/charms", response);
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GetCharmResponse>> Update([FromRoute] int id, [FromBody] CharmRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _charmService.UpdateAsync(id, request);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating charm with ID: {Id}", id);
+                return StatusCode(500, "An error occurred while updating the charm");
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            try
+            {
+                var deleted = await _charmService.DeleteAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound($"Charm with ID: {id} not found");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting charm with ID: {id}", id);
+                return StatusCode(500, "An error occurred while deleting charm");
+            }
         }
     }
 }
