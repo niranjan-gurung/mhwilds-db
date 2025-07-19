@@ -60,7 +60,27 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<GetSkillResponse>>> Create([FromBody] List<SkillRequest> requests)
+        public async Task<ActionResult<GetSkillResponse>> Create([FromBody] SkillRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _skillService.CreateAsync(request);
+                return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating skill");
+                return StatusCode(500, "An error occurred while creating skill");
+            }
+        }
+
+        [HttpPost("range")]
+        public async Task<ActionResult<List<GetSkillResponse>>> CreateRange([FromBody] List<SkillRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -76,6 +96,30 @@ namespace mhwilds_api.Controllers
             {
                 _logger.LogError(ex, "Error occurred while creating skills");
                 return StatusCode(500, "An error occurred while creating skills");
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GetSkillResponse>> Update([FromRoute] int id, [FromBody] SkillRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _skillService.UpdateAsync(id, request);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating skill with ID {Id}", id);
+                return StatusCode(500, "An error occurred while updating skill");
             }
         }
 

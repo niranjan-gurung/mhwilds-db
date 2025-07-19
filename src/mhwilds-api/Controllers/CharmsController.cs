@@ -1,11 +1,7 @@
-﻿using Mapster;
-using mhwilds_api.Models;
-using mhwilds_api.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
-using mhwilds_api.DTO.Request;
 using mhwilds_api.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace mhwilds_api.Controllers
 {
@@ -61,7 +57,27 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<GetCharmResponse>>> Create([FromBody] List<CharmRequest> requests)
+        public async Task<ActionResult<GetCharmResponse>> Create([FromBody] CharmRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _charmService.CreateAsync(request);
+                return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating charm");
+                return StatusCode(500, "An error occurred while creating charm");
+            }
+        }
+
+        [HttpPost("range")]
+        public async Task<ActionResult<List<GetCharmResponse>>> CreateRange([FromBody] List<CharmRequest> requests)
         {
             if (!ModelState.IsValid)
             {

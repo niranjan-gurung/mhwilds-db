@@ -8,8 +8,9 @@ namespace mhwilds_api.Interfaces
     {
         Task<List<GetCharmResponse>> GetAllAsync();
         Task<GetCharmResponse?> GetByIdAsync(int id);
-        Task<List<GetCharmResponse>> CreateRangeAsync(List<CharmRequest> charms);
-        Task<GetCharmResponse> UpdateAsync(int id, CharmRequest charm);
+        Task<GetCharmResponse> CreateAsync(CharmRequest request);
+        Task<List<GetCharmResponse>> CreateRangeAsync(List<CharmRequest> requests);
+        Task<GetCharmResponse> UpdateAsync(int id, CharmRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -51,6 +51,24 @@ namespace mhwilds_api.Services
             return charm.Adapt<GetCharmResponse>();
         }
 
+        public async Task<GetCharmResponse> CreateAsync(CharmRequest request)
+        {
+            var charm = request.Adapt<Charm>();
+
+            for (int i = 0; i < charm.Ranks.Count; i++)
+            {
+                await HandleCharmRankSkillAssignment(
+                    charm.Ranks[i],
+                    request.Ranks[i].Skills
+                );
+            }
+
+            var createdCharm = await _charmRepository.CreateAsync(charm);
+            _logger.LogInformation("Created new charm with ID: {id}", createdCharm.Id);
+
+            return createdCharm.Adapt<GetCharmResponse>();
+        }
+
         public async Task<List<GetCharmResponse>> CreateRangeAsync(List<CharmRequest> requests)
         {
             var charms = requests.Adapt<List<Charm>>();

@@ -3,8 +3,6 @@ using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.Interfaces;
 using mhwilds_api.Models;
-using mhwilds_api.Models.Weapons.Common;
-using mhwilds_api.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace mhwilds_api.Services
@@ -49,6 +47,20 @@ namespace mhwilds_api.Services
             }
 
             return armour.Adapt<GetArmourResponse>();
+        }
+
+        public async Task<GetArmourResponse> CreateAsync(ArmourRequest request)
+        {
+            var armour = request.Adapt<Armour>();
+
+            // handle skill assignment
+            await HandleSkillAssignment(armour, request);
+
+            var createdArmour = await _armourRepository.CreateAsync(armour);
+
+            _logger.LogInformation("Created new armour with ID: {id}", createdArmour.Id);
+
+            return createdArmour.Adapt<GetArmourResponse>();
         }
 
         public async Task<List<GetArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests)

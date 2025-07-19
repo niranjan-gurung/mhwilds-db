@@ -4,6 +4,7 @@ using mhwilds_api.DTO.Response;
 using mhwilds_api.Interfaces;
 using mhwilds_api.Models;
 using mhwilds_api.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace mhwilds_api.Services
 {
@@ -44,6 +45,16 @@ namespace mhwilds_api.Services
             }
 
             return skill.Adapt<GetSkillResponse>();
+        }
+
+        public async Task<GetSkillResponse> CreateAsync(SkillRequest request)
+        {
+            var skill = request.Adapt<Skill>();
+
+            var createdSkill = await _skillRepository.CreateAsync(skill);
+            _logger.LogInformation("Created new skill with ID: {id}", createdSkill.Id);
+
+            return createdSkill.Adapt<GetSkillResponse>();
         }
 
         public async Task<List<GetSkillResponse>> CreateRangeAsync(List<SkillRequest> requests)

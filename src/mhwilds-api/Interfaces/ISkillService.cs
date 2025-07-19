@@ -8,8 +8,8 @@ namespace mhwilds_api.Interfaces
     {
         Task<List<GetSkillResponse>> GetAllAsync();
         Task<GetSkillResponse?> GetByIdAsync(int id);
+        Task<GetSkillResponse> CreateAsync(SkillRequest request);
         Task<List<GetSkillResponse>> CreateRangeAsync(List<SkillRequest> requests);
-        //Task<GetSkillResponse> UpdateAsync(SkillRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

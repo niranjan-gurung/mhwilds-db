@@ -10,7 +10,6 @@ namespace mhwilds_api.Interfaces
         Task<Skill?> GetByIdAsync(int id);
         Task<Skill> CreateAsync(Skill skill);
         Task<List<Skill>> CreateRangeAsync(List<Skill> skills);
-        //Task<Skill> UpdateAsync(Skill skill);
         Task<bool> DeleteAsync(int id);
     }
 }

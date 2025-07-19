@@ -56,7 +56,28 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<GetArmourResponse>>> Create([FromBody] List<ArmourRequest> requests)
+        public async Task<ActionResult<GetArmourResponse>> Create([FromBody] ArmourRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _armourService.CreateAsync(request);
+                return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating armour");
+                return StatusCode(500, "An error occurred while creating armour");
+            }
+
+        }
+
+        [HttpPost("range")]
+        public async Task<ActionResult<List<GetArmourResponse>>> CreateRange([FromBody] List<ArmourRequest> requests)
         {
             if (!ModelState.IsValid)
             {

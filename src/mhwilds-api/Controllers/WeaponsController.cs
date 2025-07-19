@@ -1,13 +1,7 @@
-﻿using Mapster;
-using mhwilds_api.DTO.Request;
+﻿using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.Interfaces;
-using mhwilds_api.Models.Weapons;
-using mhwilds_api.Models.Weapons.Melee;
-using mhwilds_api.Models.Weapons.Ranged;
-using mhwilds_api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace mhwilds_api.Controllers
 {
@@ -79,6 +73,26 @@ namespace mhwilds_api.Controllers
             {
                 _logger.LogError(ex, "Error occurred while creating weapon of type {WeaponType}", request.WeaponType);
                 return StatusCode(500, "An error occurred while creating weapon");
+            }
+        }
+
+        [HttpPost("range")]
+        public async Task<ActionResult<List<GetWeaponResponse>>> CreateRange([FromBody] List<WeaponRequest> requests)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _weaponService.CreateRangeAsync(requests);
+                return CreatedAtAction(nameof(GetAll), response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating multiple weapons");
+                return StatusCode(500, "An error occurred while creating weapons");
             }
         }
 

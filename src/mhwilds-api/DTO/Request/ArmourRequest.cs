@@ -12,7 +12,7 @@ namespace mhwilds_api.DTO.Request
         [Range(1, 8)]
         public required int Rarity { get; set; }
         public required int Defense { get; set; }
-        public required CreateResistancesRequest Resistances { get; set; }
+        public required ResistancesRequest Resistances { get; set; }
         public required List<int> Slots { get; set; } = [];
         public required List<GetSkillRankResponse> Skills { get; set; } = [];
     }

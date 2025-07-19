@@ -60,7 +60,27 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<GetDecorationResponse>>> Create([FromBody] List<DecorationRequest> requests)
+        public async Task<ActionResult<GetDecorationResponse>> Create([FromBody] DecorationRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await _decorationService.CreateAsync(request);
+                return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating decoration");
+                return StatusCode(500, "An error occurred while creating decoration");
+            }
+        }
+
+        [HttpPost("range")]
+        public async Task<ActionResult<List<GetDecorationResponse>>> CreateRange([FromBody] List<DecorationRequest> requests)
         {
             if (!ModelState.IsValid)
             {

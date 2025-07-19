@@ -56,6 +56,13 @@ namespace mhwilds_api.Repository
             return weapon;
         }
 
+        public async Task<List<BaseWeapon>> CreateRangeAsync(List<BaseWeapon> weapons)
+        {
+            _context.Weapons.AddRange(weapons);
+            await _context.SaveChangesAsync();
+            return weapons;
+        }
+
         public async Task<BaseWeapon> UpdateAsync(BaseWeapon weapon)
         {
             _context.Entry(weapon).State = EntityState.Modified;

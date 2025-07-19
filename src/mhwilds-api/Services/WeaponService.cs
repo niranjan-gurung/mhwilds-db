@@ -85,6 +85,38 @@ namespace mhwilds_api.Services
             return MapWeaponToResponse(createdWeapon);
         }
 
+        public async Task<List<GetWeaponResponse>> CreateRangeAsync(List<WeaponRequest> requests)
+        {
+            var weapons = new List<BaseWeapon>();
+
+            for (int i = 0; i < requests.Count; i++)
+            {
+                var request = requests[i];
+                var weapon = MapRequestToWeapon(request);
+
+                // existing skill assignment to weapon
+                weapon.Skills = null;
+                await HandleSkillAssignment(weapon, request);
+
+                weapons.Add(weapon);
+            }
+
+            var createdWeapons = await _weaponRepository.CreateRangeAsync(weapons);
+
+            _logger.LogInformation("Created {Count} new weapons of multiple types",
+                createdWeapons.Count);
+
+            // map each weapon to its appropriate type
+            var responses = new List<GetWeaponResponse>();
+            foreach (var weapon in createdWeapons)
+            {
+                var response = MapWeaponToResponse(weapon);
+                responses.Add(response);
+            }
+
+            return responses;
+        }
+
         public async Task<GetWeaponResponse> UpdateAsync(int id, WeaponRequest request)
         {
             var existingWeapon = await _weaponRepository.GetByIdAsync(id);

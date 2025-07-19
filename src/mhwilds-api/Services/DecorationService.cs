@@ -50,6 +50,18 @@ namespace mhwilds_api.Services
             return decoration.Adapt<GetDecorationResponse>();
         }
 
+        public async Task<GetDecorationResponse> CreateAsync(DecorationRequest request)
+        {
+            var decoration = request.Adapt<Decoration>();
+
+            await HandleDecorationSkillAssignment(decoration, request);
+
+            var createdDecoration = await _decorationRepository.CreateAsync(decoration);
+            _logger.LogInformation("Created new decoration with ID: {id}", createdDecoration.Id);
+
+            return createdDecoration.Adapt<GetDecorationResponse>();
+        }
+
         public async Task<List<GetDecorationResponse>> CreateRangeAsync(List<DecorationRequest> requests)
         {
             var decorations = requests.Adapt<List<Decoration>>();
