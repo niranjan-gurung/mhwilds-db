@@ -63,7 +63,7 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetWeaponResponse>> Create([FromBody] CreateWeaponRequest request)
+        public async Task<ActionResult<GetWeaponResponse>> Create([FromBody] WeaponRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace mhwilds_api.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetWeaponResponse>> Update([FromRoute] int id, [FromBody] CreateWeaponRequest request)
+        public async Task<ActionResult<GetWeaponResponse>> Update([FromRoute] int id, [FromBody] WeaponRequest request)
         {
             if (!ModelState.IsValid)
             {

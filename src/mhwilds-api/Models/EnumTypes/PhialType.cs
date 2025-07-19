@@ -1,4 +1,4 @@
-﻿namespace mhwilds_api.Models.Weapons.Types
+﻿namespace mhwilds_api.Models.EnumTypes
 {
     public enum PhialType
     {

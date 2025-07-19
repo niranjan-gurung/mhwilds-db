@@ -1,11 +1,11 @@
 ﻿using Mapster;
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.Models.EnumTypes;
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
-using mhwilds_api.Models.Weapons.Types;
 
 namespace mhwilds_api
 {
@@ -46,7 +46,7 @@ namespace mhwilds_api
         private static void ConfigureWeaponRequestToEntityMappings()
         {
             // configure request DTOs to weapon entities
-            TypeAdapterConfig<CreateWeaponRequest, BaseWeapon>
+            TypeAdapterConfig<WeaponRequest, BaseWeapon>
                 .NewConfig()
                 .Include<CreateGreatswordRequest, Greatsword>()
                 .Include<CreateLongswordRequest, Longsword>()
@@ -75,6 +75,15 @@ namespace mhwilds_api
                 .NewConfig()
                 .MapWith(src => src.ToString());
 
+            TypeAdapterConfig<ShellType, string>
+                .NewConfig()
+                .MapWith(src => src.ToString());
+
+            // gunlance shell object mapping:
+            TypeAdapterConfig<CreateShellRequest, Shell>.NewConfig();
+            TypeAdapterConfig<Shell, GetShellResponse>.NewConfig();
+
+            // ammo object mapping:
             TypeAdapterConfig<CreateAmmoRequest, Ammo>.NewConfig();
             TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig();
             TypeAdapterConfig<Ammo, GetHBGAmmoResponse>.NewConfig();

@@ -7,8 +7,8 @@ namespace mhwilds_api.Interfaces
     {
         Task<List<GetWeaponResponse>> GetAllAsync();
         Task<GetWeaponResponse?> GetByIdAsync(int id);
-        Task<GetWeaponResponse> CreateAsync(CreateWeaponRequest request);
-        Task<GetWeaponResponse> UpdateAsync(int id, CreateWeaponRequest request);
+        Task<GetWeaponResponse> CreateAsync(WeaponRequest request);
+        Task<GetWeaponResponse> UpdateAsync(int id, WeaponRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

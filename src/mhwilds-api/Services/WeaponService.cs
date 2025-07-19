@@ -2,9 +2,11 @@
 using mhwilds_api.DTO.Request;
 using mhwilds_api.DTO.Response;
 using mhwilds_api.Interfaces;
+using mhwilds_api.Models;
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
+using Microsoft.EntityFrameworkCore;
 
 namespace mhwilds_api.Services
 {
@@ -16,13 +18,16 @@ namespace mhwilds_api.Services
     public class WeaponService : IWeaponService
     {
         private readonly IWeaponRepository _weaponRepository;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<WeaponService> _logger;
 
         public WeaponService(
             IWeaponRepository weaponRepository,
+            ApplicationDbContext context,
             ILogger<WeaponService> logger)
         {
             _weaponRepository = weaponRepository;
+            _context = context;
             _logger = logger;
         }
 
@@ -60,9 +65,18 @@ namespace mhwilds_api.Services
             return MapWeaponToResponse(weapon);
         }
 
-        public async Task<GetWeaponResponse> CreateAsync(CreateWeaponRequest request)
+        public async Task<GetWeaponResponse> CreateAsync(WeaponRequest request)
         {
             BaseWeapon weapon = MapRequestToWeapon(request);
+
+            // clear auto mapped skills by Mapster
+            weapon.Skills = null;
+
+            // handle skill assignment
+            // references existing skills instead of creating new skill/skillranks,
+            // this avoids duplicate skill ids.
+            await HandleSkillAssignment(weapon, request);
+
             var createdWeapon = await _weaponRepository.CreateAsync(weapon);
             
             _logger.LogInformation("Created new weapon with ID: {Id} of type: {WeaponType}", 
@@ -71,7 +85,7 @@ namespace mhwilds_api.Services
             return MapWeaponToResponse(createdWeapon);
         }
 
-        public async Task<GetWeaponResponse> UpdateAsync(int id, CreateWeaponRequest request)
+        public async Task<GetWeaponResponse> UpdateAsync(int id, WeaponRequest request)
         {
             var existingWeapon = await _weaponRepository.GetByIdAsync(id);
             if (existingWeapon == null)
@@ -104,7 +118,7 @@ namespace mhwilds_api.Services
             return deleted;
         }
 
-        #region Response/Request Mappers
+        #region Helper Methods
         private GetWeaponResponse MapWeaponToResponse(BaseWeapon weapon)
         {
             return weapon switch
@@ -127,7 +141,7 @@ namespace mhwilds_api.Services
             };
         }
 
-        private BaseWeapon MapRequestToWeapon(CreateWeaponRequest request)
+        private BaseWeapon MapRequestToWeapon(WeaponRequest request)
         {
             return request switch
             {
@@ -147,6 +161,21 @@ namespace mhwilds_api.Services
                 CreateBowRequest bow => bow.Adapt<Bow>(),
                 _ => throw new InvalidOperationException("Unsupported weapon type.")
             };
+        }
+        
+        private async Task HandleSkillAssignment(BaseWeapon weapon, WeaponRequest request)
+        {
+            if (request.Skills?.Count > 0)
+            {
+                var skillRankIds = request.Skills
+                    .Select(sr => sr.Id).ToList();
+
+                var skillRanks = await _context.SkillRanks
+                    .Where(sr => skillRankIds.Contains(sr.Id))
+                    .ToListAsync();
+
+                weapon.Skills = skillRanks;
+            }
         }
         #endregion
     }

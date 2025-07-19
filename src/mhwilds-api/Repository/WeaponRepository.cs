@@ -2,11 +2,11 @@
 using mhwilds_api.Interfaces;
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Ranged;
-using mhwilds_api.Models.Weapons.Types;
 using mhwilds_api.Services;
 using mhwilds_api.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using mhwilds_api.Models.EnumTypes;
 
 namespace mhwilds_api.Repository
 {

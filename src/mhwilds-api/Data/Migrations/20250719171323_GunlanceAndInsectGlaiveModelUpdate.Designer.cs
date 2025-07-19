@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using mhwilds_api.Services;
@@ -11,9 +12,11 @@ using mhwilds_api.Services;
 namespace mhwilds_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250719171323_GunlanceAndInsectGlaiveModelUpdate")]
+    partial class GunlanceAndInsectGlaiveModelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -756,7 +759,7 @@ namespace mhwilds_api.Migrations
                             b1.Property<int>("GunlanceId")
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("Power")
+                            b1.Property<int>("Level")
                                 .HasColumnType("integer");
 
                             b1.Property<int>("Type")

@@ -1,7 +1,9 @@
 ﻿using JsonSubTypes;
+using mhwilds_api.DTO.Request;
+using mhwilds_api.Models.EnumTypes;
 using mhwilds_api.Models.Weapons.Common;
-using mhwilds_api.Models.Weapons.Types;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
 namespace mhwilds_api.DTO.Response
@@ -72,6 +74,7 @@ namespace mhwilds_api.DTO.Response
     public class GetGunlanceResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
+        public GetShellResponse? Shell { get; set; }
     }
 
     public class GetLanceResponse : GetWeaponResponse
@@ -94,6 +97,7 @@ namespace mhwilds_api.DTO.Response
     public class GetInsectGlaiveResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
+        public int KinsectLevel { get; set; }
     }
     #endregion
 
@@ -137,6 +141,12 @@ namespace mhwilds_api.DTO.Response
         public int Blue { get; set; }
         public int White { get; set; }
         public int Purple { get; set; }
+    }
+
+    public class GetShellResponse
+    {
+        public string Type { get; set; } = string.Empty;
+        public int Power { get; set; }
     }
 
     public class GetLBGAmmoResponse

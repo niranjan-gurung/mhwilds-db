@@ -1,4 +1,4 @@
-﻿namespace mhwilds_api.Models.Weapons.Types;
+﻿namespace mhwilds_api.Models.EnumTypes;
 
 /// 
 /// represents all weapon types currently in the game

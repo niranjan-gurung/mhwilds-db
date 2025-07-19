@@ -1,4 +1,4 @@
-﻿using mhwilds_api.Models.Weapons.Types;
+﻿using mhwilds_api.Models.EnumTypes;
 
 namespace mhwilds_api.Models.Weapons.Ranged
 {

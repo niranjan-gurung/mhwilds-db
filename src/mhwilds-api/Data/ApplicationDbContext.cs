@@ -1,9 +1,9 @@
 ﻿using mhwilds_api.Models;
+using mhwilds_api.Models.EnumTypes;
 using mhwilds_api.Models.Weapons;
 using mhwilds_api.Models.Weapons.Common;
 using mhwilds_api.Models.Weapons.Melee;
 using mhwilds_api.Models.Weapons.Ranged;
-using mhwilds_api.Models.Weapons.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -36,13 +36,17 @@ namespace mhwilds_api.Services
             // weapons specifics - base, ranged, melee
             ConfigureWeaponInheritance(modelBuilder);
 
+            // configure all owned types between models:
+            // armour -> resistances
+            // weapons -> ammo, damage, element
+            ConfigureOwnedTypes(modelBuilder);
+
             // convert coating types to string to store in db
             ConfigureBowCoatings(modelBuilder);
         }
 
         private void ConfigureGeneralEntityModels(ModelBuilder modelBuilder)
         {
-            #region Skills
             // skill -> skillRanks
             // 1 - many
             modelBuilder.Entity<Skill>()
@@ -50,23 +54,13 @@ namespace mhwilds_api.Services
                 .WithOne(sr => sr.Skill)
                 .HasForeignKey(sr => sr.SkillId)
                 .OnDelete(DeleteBehavior.Cascade);
-            #endregion
-
-            #region Armours
-            // armour / resistances relation
-            // resistances is owned by armour
-            // it is not a separate table
-            modelBuilder.Entity<Armour>()
-                .OwnsOne(a => a.Resistances);
 
             // armour -> skillRanks
             // many - many            
             modelBuilder.Entity<Armour>()
                 .HasMany(a => a.Skills)
                 .WithMany(sr => sr.Armours);
-            #endregion
 
-            #region Charms
             // charm -> charmRanks
             // 1 - many
             modelBuilder.Entity<Charm>()
@@ -80,15 +74,12 @@ namespace mhwilds_api.Services
             modelBuilder.Entity<CharmRank>()
                 .HasMany(cr => cr.Skills)
                 .WithMany(sr => sr.Charms);
-            #endregion
 
-            #region Decorations
             // decorations -> skillRanks
             // many - many            
             modelBuilder.Entity<Decoration>()
                 .HasMany(a => a.Skills)
                 .WithMany(sr => sr.Decorations);
-            #endregion
         }
 
         private void ConfigureWeaponInheritance(ModelBuilder modelBuilder)
@@ -121,6 +112,17 @@ namespace mhwilds_api.Services
                 .WithMany()
                 .UsingEntity(j => j.ToTable("BaseWeaponSkillRank"));
 
+            ConfigureMeleeWeaponSharpness(modelBuilder);
+        }
+
+        private void ConfigureOwnedTypes(ModelBuilder modelBuilder)
+        {
+            // armour / resistances relation
+            // resistances is owned by armour
+            // it is not a separate table
+            modelBuilder.Entity<Armour>()
+                .OwnsOne(a => a.Resistances);
+
             // Damage: owned type to base weapon
             modelBuilder.Entity<BaseWeapon>()
                 .OwnsOne(w => w.Damage, damage =>
@@ -152,12 +154,10 @@ namespace mhwilds_api.Services
                     });
                 });
 
-            ConfigureRangedWeaponAmmo(modelBuilder);
-            ConfigureMeleeWeaponSharpness(modelBuilder);
-        }
+            // configure shell as owned type for gunlance
+            modelBuilder.Entity<Gunlance>()
+                .OwnsOne(g => g.Shell);
 
-        private void ConfigureRangedWeaponAmmo(ModelBuilder modelBuilder)
-        {
             // configure unique table for each gun type:
             modelBuilder.Entity<LightBowgun>()
                 .OwnsMany(lgb => lgb.Ammo, ammo =>

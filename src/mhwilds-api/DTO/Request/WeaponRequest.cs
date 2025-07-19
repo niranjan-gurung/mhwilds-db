@@ -1,7 +1,7 @@
 ﻿using JsonSubTypes;
 using mhwilds_api.DTO.Response;
+using mhwilds_api.Models.EnumTypes;
 using mhwilds_api.Models.Weapons.Common;
-using mhwilds_api.Models.Weapons.Types;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,7 +22,7 @@ namespace mhwilds_api.DTO.Request
     [JsonSubtypes.KnownSubType(typeof(CreateLightBowgunRequest), WeaponType.LightBowgun)]
     [JsonSubtypes.KnownSubType(typeof(CreateHeavyBowgunRequest), WeaponType.HeavyBowgun)]
     [JsonSubtypes.KnownSubType(typeof(CreateBowRequest), WeaponType.Bow)]
-    public abstract class CreateWeaponRequest
+    public abstract class WeaponRequest
     {
         public required string Name { get; set; }
         public required string Description { get; set; }
@@ -39,47 +39,48 @@ namespace mhwilds_api.DTO.Request
     }
 
     #region Melee Weapons
-    public class CreateGreatswordRequest : CreateWeaponRequest
+    public class CreateGreatswordRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateLongswordRequest : CreateWeaponRequest
+    public class CreateLongswordRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateDualBladesRequest : CreateWeaponRequest
+    public class CreateDualBladesRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateSwordAndShieldRequest : CreateWeaponRequest
+    public class CreateSwordAndShieldRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateHammerRequest : CreateWeaponRequest
+    public class CreateHammerRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateHuntingHornRequest : CreateWeaponRequest
+    public class CreateHuntingHornRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateGunlanceRequest : CreateWeaponRequest
+    public class CreateGunlanceRequest : WeaponRequest
+    {
+        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateShellRequest? Shell { get; set; }
+    }
+
+    public class CreateLanceRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
     }
 
-    public class CreateLanceRequest : CreateWeaponRequest
-    {
-        public CreateSharpnessRequest? Sharpness { get; set; }
-    }
-
-    public class CreateChargeBladesRequest : CreateWeaponRequest
+    public class CreateChargeBladesRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
 
@@ -87,21 +88,23 @@ namespace mhwilds_api.DTO.Request
         public string? Phial { get; set; }
     }
 
-    public class CreateSwitchAxeRequest : CreateWeaponRequest
+    public class CreateSwitchAxeRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
         [StringLength(12)]
         public string? Phial { get; set; }
     }
 
-    public class CreateInsectGlaiveRequest : CreateWeaponRequest
+    public class CreateInsectGlaiveRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
+        [Range(1, 10)]
+        public int KinsectLevel { get; set; }
     }
     #endregion
 
     #region Ranged Weapons
-    public class CreateLightBowgunRequest : CreateWeaponRequest
+    public class CreateLightBowgunRequest : WeaponRequest
     {
         public List<CreateAmmoRequest>? Ammo { get; set; }
 
@@ -109,12 +112,12 @@ namespace mhwilds_api.DTO.Request
         public string? SpecialAmmo { get; set; }
     }
 
-    public class CreateHeavyBowgunRequest : CreateWeaponRequest
+    public class CreateHeavyBowgunRequest : WeaponRequest
     {
         public List<CreateAmmoRequest>? Ammo { get; set; }
     }
 
-    public class CreateBowRequest : CreateWeaponRequest
+    public class CreateBowRequest : WeaponRequest
     {
         public List<string>? Coatings { get; set; }
     }
@@ -148,17 +151,22 @@ namespace mhwilds_api.DTO.Request
         public int Purple { get; set; }
     }
 
+    public class CreateShellRequest
+    {
+        [Required]
+        public string Type { get; set; } = string.Empty;
+        [Range(1, 3)]
+        public int Power { get; set; }
+    }
+
     public class CreateAmmoRequest
     {
         [Required]
         public string Type { get; set; } = string.Empty;
-
         [Range(1, 3)]
         public int Level { get; set; }
-
         [Range(1, 99)]
         public int Capacity { get; set; }
-
         public bool? Rapid { get; set; }
     }
     #endregion

@@ -1,5 +1,5 @@
-﻿using mhwilds_api.Models.Weapons.Common;
-using mhwilds_api.Models.Weapons.Types;
+﻿using mhwilds_api.Models.EnumTypes;
+using mhwilds_api.Models.Weapons.Common;
 
 namespace mhwilds_api.Models.Weapons.Melee
 {
@@ -9,6 +9,7 @@ namespace mhwilds_api.Models.Weapons.Melee
         {
             WeaponType = WeaponType.Gunlance;
         }
+        public Shell Shell { get; set; }
         public Sharpness Sharpness { get; set; }
     }
 }
