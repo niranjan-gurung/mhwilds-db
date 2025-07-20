@@ -21,6 +21,7 @@ mono_crash.*
 
 # Dockerfiles
 *.dcproj
+docker-compose.override.yml
 
 # Build results
 [Dd]ebug/
