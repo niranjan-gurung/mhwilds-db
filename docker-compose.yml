@@ -1,35 +1,35 @@
 services:
     mhwilds-api:
-        image: ${DOCKER_REGISTRY}mhwildsapi
+        image: ${DOCKER_REGISTRY-}mhwildsapi
         build:
-            context: ./src/mhwilds-api/
-            dockerfile: Dockerfile
+            context: ./src
+            dockerfile: mhwilds.API/Dockerfile
         ports:
-            - 5000:5000
-            - 5001:5001
+            - "5000:5000"
+            - "5001:5001"
         depends_on:
-            - api-database
+            - postgres
 
-    api-database:
+    postgres:
         image: postgres:latest
         environment:
-            POSTGRES_DB: mhwilds_db
+            POSTGRES_DB: mhwildsdb
             POSTGRES_USER: postgres 
             POSTGRES_PASSWORD: postgres
         ports:
-            - 5432:5432
+            - "5432:5432"
         volumes:
             - pgdata:/var/lib/postgresql/data
 
     pgadmin:
-        image: dpage/pgadmin4
+        image: dpage/pgadmin4:latest
         environment:
             PGADMIN_DEFAULT_EMAIL: admin@admin.com
             PGADMIN_DEFAULT_PASSWORD: admin
         ports:
-            - 8080:80
+            - "8080:80"
         depends_on:
-            - api-database
+            - postgres
 
 volumes:
     pgdata:
