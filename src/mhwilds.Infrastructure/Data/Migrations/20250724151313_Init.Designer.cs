@@ -12,7 +12,7 @@ using mhwilds.Infrastructure.Data.Context;
 namespace mhwilds.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250720195939_Init")]
+    [Migration("20250724151313_Init")]
     partial class Init
     {
         /// <inheritdoc />

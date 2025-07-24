@@ -128,7 +128,7 @@ namespace mhwilds.Application.Services
                     .Select(sr => sr.Id).ToList();
 
                 var skillRanks = await _skillRepository
-                    .GetSkillRanksBySkillIdsAsync(skillRankIds);
+                    .GetSkillRanksByIdsAsync(skillRankIds);
 
                 armour.Skills = skillRanks;
             }

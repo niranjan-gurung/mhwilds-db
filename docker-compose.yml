@@ -13,7 +13,7 @@ services:
     postgres:
         image: postgres:latest
         environment:
-            POSTGRES_DB: mhwildsdb
+            POSTGRES_DB: mhwilds_db
             POSTGRES_USER: postgres 
             POSTGRES_PASSWORD: postgres
         ports:

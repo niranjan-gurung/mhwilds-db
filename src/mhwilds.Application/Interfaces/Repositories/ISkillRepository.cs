@@ -10,5 +10,6 @@ namespace mhwilds.Application.Interfaces.Repositories
         Task<List<Skill>> CreateRangeAsync(List<Skill> skills);
         Task<bool> DeleteAsync(int id);
         Task<List<SkillRank>> GetSkillRanksBySkillIdsAsync(List<int> skillIds);
+        Task<List<SkillRank>> GetSkillRanksByIdsAsync(List<int> skillRankIds);
     }
 }

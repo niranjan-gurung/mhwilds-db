@@ -63,6 +63,14 @@ namespace mhwilds.Infrastructure.Repository
                 .Where(sr => skillIds.Contains(sr.SkillId))
                 .ToListAsync();
         }
+
+        public async Task<List<SkillRank>> GetSkillRanksByIdsAsync(List<int> skillRankIds)
+        {
+            return await _context.SkillRanks
+                .Include(sr => sr.Skill)
+                .Where(sr => skillRankIds.Contains(sr.Id))
+                .ToListAsync();
+        }
         #endregion
     }
 }

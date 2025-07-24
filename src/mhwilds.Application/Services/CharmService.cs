@@ -142,13 +142,8 @@ namespace mhwilds.Application.Services
                 var skillRankIds = skills
                     .Select(sr => sr.Id).ToList();
 
-                //var skillRanks = await _context.SkillRanks
-                //    .Where(sr => skillRankIds.Contains(sr.Id))
-                //    .Include(sr => sr.Skill)
-                //    .ToListAsync();
-
                 var skillRanks = await _skillRepository
-                    .GetSkillRanksBySkillIdsAsync(skillRankIds);
+                    .GetSkillRanksByIdsAsync(skillRankIds);
 
                 charmRank.Skills = skillRanks;
             }
