@@ -5,6 +5,9 @@
         Impact,
         Element,
         Power,
-        ElementBoost
+        Poison,
+        Exhaust,
+        Paralysis,
+        Dragon
     }
 }

@@ -10,7 +10,7 @@ namespace mhwilds.Domain.Entities.Weapons.Melee
         {
             WeaponType = WeaponType.SwitchAxe;
         }
-        public PhialType Phial { get; set; }
+        public Phial Phial { get; set; }
         public Sharpness Sharpness { get; set; }
     }
 }

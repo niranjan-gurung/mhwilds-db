@@ -32,8 +32,8 @@ namespace mhwilds.Application.DTO.Response
         public int Rarity { get; set; }
         public List<int>? Slot { get; set; }
         public int Affinity { get; set; }
-        public Damage Damage { get; set; }
-        public Element? Element { get; set; }
+        public GetDamageResponse Damage { get; set; }
+        public GetElementResponse? Element { get; set; }
         public List<GetSkillRankResponse>? Skills { get; set; }
     }
 
@@ -82,13 +82,13 @@ namespace mhwilds.Application.DTO.Response
     public class GetChargeBladesResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        public string? PhialType { get; set; }
+        public GetPhialResponse Phial { get; set; }
     }
 
     public class GetSwitchAxeResponse : GetWeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        public string? PhialType { get; set; }
+        public GetPhialResponse Phial { get; set; }
     }
 
     public class GetInsectGlaiveResponse : GetWeaponResponse
@@ -127,6 +127,20 @@ namespace mhwilds.Application.DTO.Response
     {
         public string Type { get; set; } = string.Empty;
         public GetDamageResponse? Damage { get; set; }
+
+        // Newtonsoft.Json's convention based serialisation
+        // syntax - ShouldSerialize{propertyName}()
+        // these methods are invoked automatically,
+        // checks property and appropriately returns the boolean result.
+        // if both properties == false, element field will be an empty object {}
+        public bool ShouldSerializeType()
+        {
+            return !string.IsNullOrEmpty(Type);
+        }
+        public bool ShouldSerializeDamage()
+        {
+            return Damage != null && (Damage.Raw != 0 || Damage.Display != 0);
+        }
     }
 
     public class GetSharpnessResponse
@@ -144,6 +158,16 @@ namespace mhwilds.Application.DTO.Response
     {
         public string Type { get; set; } = string.Empty;
         public int Power { get; set; }
+    }
+
+    public class GetPhialResponse
+    {
+        public string Type { get; set; }
+        public GetDamageResponse? Damage { get; set; }
+        public bool ShouldSerializeDamage()
+        {
+            return Damage != null && (Damage.Raw != 0 || Damage.Display != 0);
+        }
     }
 
     public class GetLBGAmmoResponse

@@ -1,6 +1,6 @@
 ﻿using mhwilds.Domain.EnumTypes;
 
-namespace mhwilds.Domain.Entities.Weapons.Common
+namespace mhwilds.Domain.Entities.Weapons
 {
     // Shell type specific for gunlance
     public class Shell

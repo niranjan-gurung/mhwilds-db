@@ -33,8 +33,8 @@ namespace mhwilds.Application.DTO.Request
         public List<int>? Slot { get; set; }
         [Range(-100, 100)]
         public required int Affinity { get; set; }
-        public required Damage Damage { get; set; }
-        public Element? Element { get; set; }
+        public required CreateDamageRequest Damage { get; set; }
+        public CreateElementRequest? Element { get; set; }
         public List<GetSkillRankResponse>? Skills { get; set; }
     }
 
@@ -83,16 +83,13 @@ namespace mhwilds.Application.DTO.Request
     public class CreateChargeBladesRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
-
-        [StringLength(12)]
-        public string? Phial { get; set; }
+        public CreatePhialRequest Phial { get; set; }
     }
 
     public class CreateSwitchAxeRequest : WeaponRequest
     {
         public CreateSharpnessRequest? Sharpness { get; set; }
-        [StringLength(12)]
-        public string? Phial { get; set; }
+        public CreatePhialRequest Phial { get; set; }
     }
 
     public class CreateInsectGlaiveRequest : WeaponRequest
@@ -134,10 +131,8 @@ namespace mhwilds.Application.DTO.Request
 
     public class CreateElementRequest
     {
-        [Required]
-        public string Type { get; set; } = string.Empty;
-        [Required]
-        public CreateDamageRequest Damage { get; set; } = new();
+        public string? Type { get; set; }
+        public CreateDamageRequest? Damage { get; set; }
     }
 
     public class CreateSharpnessRequest
@@ -157,6 +152,13 @@ namespace mhwilds.Application.DTO.Request
         public string Type { get; set; } = string.Empty;
         [Range(1, 3)]
         public int Power { get; set; }
+    }
+
+    public class CreatePhialRequest
+    {
+        [Required]
+        public string Type { get; set; }
+        public CreateDamageRequest? Damage { get; set; }
     }
 
     public class CreateAmmoRequest

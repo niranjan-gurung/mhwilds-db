@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using mhwilds.Infrastructure.Data.Context;
@@ -11,9 +12,11 @@ using mhwilds.Infrastructure.Data.Context;
 namespace mhwilds.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250916123107_PhialsAdded")]
+    partial class PhialsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,10 +585,13 @@ namespace mhwilds.Infrastructure.Migrations
                             b1.Property<int>("ChargeBladeId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Type")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("CBPhial");
+                            b1.Property<int>("Type")
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("Value")
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasColumnType("integer");
 
                             b1.HasKey("ChargeBladeId");
 
@@ -593,29 +599,6 @@ namespace mhwilds.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("ChargeBladeId");
-
-                            b1.OwnsOne("mhwilds.Domain.Entities.Weapons.Common.Damage", "Damage", b2 =>
-                                {
-                                    b2.Property<int>("PhialChargeBladeId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<int>("Display")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("CBPhialDamageDisplay");
-
-                                    b2.Property<int>("Raw")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("CBPhialDamageRaw");
-
-                                    b2.HasKey("PhialChargeBladeId");
-
-                                    b2.ToTable("Weapons");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("PhialChargeBladeId");
-                                });
-
-                            b1.Navigation("Damage");
                         });
 
                     b.OwnsOne("mhwilds.Domain.Entities.Weapons.Common.Sharpness", "Sharpness", b1 =>
@@ -1134,10 +1117,13 @@ namespace mhwilds.Infrastructure.Migrations
                             b1.Property<int>("SwitchAxeId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Type")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("SAPhial");
+                            b1.Property<int>("Type")
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("Value")
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasColumnType("integer");
 
                             b1.HasKey("SwitchAxeId");
 
@@ -1145,29 +1131,6 @@ namespace mhwilds.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("SwitchAxeId");
-
-                            b1.OwnsOne("mhwilds.Domain.Entities.Weapons.Common.Damage", "Damage", b2 =>
-                                {
-                                    b2.Property<int>("PhialSwitchAxeId")
-                                        .HasColumnType("integer");
-
-                                    b2.Property<int>("Display")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("SAPhialDamageDisplay");
-
-                                    b2.Property<int>("Raw")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("SAPhialDamageRaw");
-
-                                    b2.HasKey("PhialSwitchAxeId");
-
-                                    b2.ToTable("Weapons");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("PhialSwitchAxeId");
-                                });
-
-                            b1.Navigation("Damage");
                         });
 
                     b.OwnsOne("mhwilds.Domain.Entities.Weapons.Common.Sharpness", "Sharpness", b1 =>

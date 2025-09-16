@@ -79,11 +79,23 @@ namespace mhwilds.Application.Mapping
                 .NewConfig()
                 .MapWith(src => src.ToString());
 
-            // gunlance shell object mapping:
+            // object mappings:
+            // gunlance shells:
             TypeAdapterConfig<CreateShellRequest, Shell>.NewConfig();
             TypeAdapterConfig<Shell, GetShellResponse>.NewConfig();
 
-            // ammo object mapping:
+            // phials:
+            TypeAdapterConfig<CreatePhialRequest, Phial>
+                .NewConfig()
+                .Map(dest => dest.Type, src => Enum.Parse<PhialType>(src.Type, true))
+                .Map(dest => dest.Damage, src => src.Damage);
+
+            TypeAdapterConfig<Phial, GetPhialResponse>
+                .NewConfig()
+                .Map(dest => dest.Type, src => src.Type.ToString())
+                .Map(dest => dest.Damage, src => src.Damage);
+
+            // ammos:
             TypeAdapterConfig<CreateAmmoRequest, Ammo>.NewConfig();
             TypeAdapterConfig<Ammo, GetLBGAmmoResponse>.NewConfig();
             TypeAdapterConfig<Ammo, GetHBGAmmoResponse>.NewConfig();

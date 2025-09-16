@@ -154,9 +154,53 @@ namespace mhwilds.Infrastructure.Data.Context
                     });
                 });
 
-            // configure shell as owned type for gunlance
+            // configure owned types:
+            // shells for gunlance
             modelBuilder.Entity<Gunlance>()
                 .OwnsOne(g => g.Shell);
+
+            // phials for chargeblade and switchaxe
+            modelBuilder.Entity<ChargeBlade>()
+                .OwnsOne(cb => cb.Phial, phial =>
+                {
+                    phial.Property(p => p.Type)
+                        .HasColumnName("CBPhial")
+                        .HasConversion(
+                            v => v.ToString(),
+                            v => Enum.Parse<PhialType>(v)
+                        );
+
+                    // nested damage type for phials
+                    phial.OwnsOne(p => p.Damage, damage =>
+                    {
+                        damage.Property(d => d.Raw)
+                            .HasColumnName("CBPhialDamageRaw");
+
+                        damage.Property(d => d.Display)
+                            .HasColumnName("CBPhialDamageDisplay");
+                    });
+                });
+
+            modelBuilder.Entity<SwitchAxe>()
+                .OwnsOne(sa => sa.Phial, phial =>
+                {
+                    phial.Property(p => p.Type)
+                        .HasColumnName("SAPhial")
+                        .HasConversion(
+                            v => v.ToString(),
+                            v => Enum.Parse<PhialType>(v)
+                        );
+
+                    // nested damage type for phials
+                    phial.OwnsOne(p => p.Damage, damage =>
+                    {
+                        damage.Property(d => d.Raw)
+                            .HasColumnName("SAPhialDamageRaw");
+
+                        damage.Property(d => d.Display)
+                            .HasColumnName("SAPhialDamageDisplay");
+                    });
+                });
 
             // configure unique table for each gun type:
             modelBuilder.Entity<LightBowgun>()
