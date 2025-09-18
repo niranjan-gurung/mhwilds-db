@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace mhwilds.API.Controllers
 {
     [ApiController]
-    [Route("api/skills")]
+    [Route("api/[controller]")]
     public class SkillsController : ControllerBase
     {
         private readonly ISkillService _skillService;

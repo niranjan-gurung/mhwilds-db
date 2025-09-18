@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace mhwilds.API.Controllers
 {
     [ApiController]
-    [Route("api/weapons")]
+    [Route("api/[controller]")]
     public class WeaponsController : ControllerBase
     {
         private readonly IWeaponService _weaponService;

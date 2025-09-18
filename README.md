@@ -1,6 +1,6 @@
 ﻿## A database collection of all of the following:
 
-- Weapons (TODO)
+- Weapons (COMPLETE)
 - Armours (COMPLETE)
 - Charms (COMPLETE)
 - Decorations (COMPLETE)

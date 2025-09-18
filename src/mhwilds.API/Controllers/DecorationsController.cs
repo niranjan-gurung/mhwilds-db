@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace mhwilds.API.Controllers
 {
     [ApiController]
-    [Route("api/decorations")]
+    [Route("api/[controller]")]
     public class DecorationsController : ControllerBase
     {
         private readonly IDecorationService _decorationService;

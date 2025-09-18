@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace mhwilds.API.Controllers
 {
     [ApiController]
-    [Route("api/charms")]
+    [Route("api/[controller]")]
     public class CharmsController : ControllerBase
     {
         private readonly ICharmService _charmService;
