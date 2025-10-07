@@ -12,13 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 // contains db connection string
 builder.Configuration.AddUserSecrets<Program>();
 
-// add repo and service layers:
-// @service layer:
-//      this is an extension to the Irepository factories,
-//      it handles error checking and any additional functionalities that,
-//      is inappropriate for repository models.
-builder.Services.AddApplication();                              // service
-builder.Services.AddInfrastructure(builder.Configuration);      // repository
+// add layers
+builder.Services.AddApplication();                              
+builder.Services.AddInfrastructure(builder.Configuration);      
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

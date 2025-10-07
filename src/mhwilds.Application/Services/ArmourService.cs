@@ -24,7 +24,7 @@ namespace mhwilds.Application.Services
             _logger = logger;
         }
 
-        public async Task<List<GetArmourResponse>> GetAllAsync()
+        public async Task<List<ArmourResponse>> GetAllAsync()
         {
             var armours = await _armourRepository.GetAllAsync();
 
@@ -34,10 +34,10 @@ namespace mhwilds.Application.Services
                 return [];
             }
 
-            return armours.Adapt<List<GetArmourResponse>>();
+            return armours.Adapt<List<ArmourResponse>>();
         }
 
-        public async Task<GetArmourResponse?> GetByIdAsync(int id)
+        public async Task<ArmourResponse?> GetByIdAsync(int id)
         {
             var armour = await _armourRepository.GetByIdAsync(id);
 
@@ -47,10 +47,10 @@ namespace mhwilds.Application.Services
                 return null;
             }
 
-            return armour.Adapt<GetArmourResponse>();
+            return armour.Adapt<ArmourResponse>();
         }
 
-        public async Task<GetArmourResponse> CreateAsync(ArmourRequest request)
+        public async Task<ArmourResponse> CreateAsync(ArmourRequest request)
         {
             var armour = request.Adapt<Armour>();
 
@@ -61,10 +61,10 @@ namespace mhwilds.Application.Services
 
             _logger.LogInformation("Created new armour with ID: {id}", createdArmour.Id);
 
-            return createdArmour.Adapt<GetArmourResponse>();
+            return createdArmour.Adapt<ArmourResponse>();
         }
 
-        public async Task<List<GetArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests)
+        public async Task<List<ArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests)
         {
             var armours = requests.Adapt<List<Armour>>();
 
@@ -81,10 +81,10 @@ namespace mhwilds.Application.Services
 
             _logger.LogInformation("Created {Count} new armours", createdArmours.Count);
 
-            return createdArmours.Adapt<List<GetArmourResponse>>();
+            return createdArmours.Adapt<List<ArmourResponse>>();
         }
 
-        public async Task<GetArmourResponse> UpdateAsync(int id, ArmourRequest request)
+        public async Task<ArmourResponse> UpdateAsync(int id, ArmourRequest request)
         {
             var existingArmour = await _armourRepository.GetByIdAsync(id);
 
@@ -101,7 +101,7 @@ namespace mhwilds.Application.Services
             var updatedArmour = await _armourRepository.UpdateAsync(armour);
 
             _logger.LogInformation("Updated armour with ID {Id}", id);
-            return updatedArmour.Adapt<GetArmourResponse>();
+            return updatedArmour.Adapt<ArmourResponse>();
         }
 
         public async Task<bool> DeleteAsync(int id)

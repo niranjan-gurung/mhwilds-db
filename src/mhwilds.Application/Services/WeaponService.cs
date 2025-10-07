@@ -31,7 +31,7 @@ namespace mhwilds.Application.Services
             _logger = logger;
         }
 
-        public async Task<List<GetWeaponResponse>> GetAllAsync()
+        public async Task<List<WeaponResponse>> GetAllAsync()
         {
             var weapons = await _weaponRepository.GetAllAsync();
 
@@ -41,18 +41,18 @@ namespace mhwilds.Application.Services
                 return [];
             }
 
-            var response = new List<GetWeaponResponse>();
+            var response = new List<WeaponResponse>();
 
             foreach (var weapon in weapons)
             {
-                GetWeaponResponse weaponResponse = MapWeaponToResponse(weapon);
+                WeaponResponse weaponResponse = MapWeaponToResponse(weapon);
                 response.Add(weaponResponse);
             }
 
             return response;
         }
 
-        public async Task<GetWeaponResponse?> GetByIdAsync(int id)
+        public async Task<WeaponResponse?> GetByIdAsync(int id)
         {
             var weapon = await _weaponRepository.GetByIdAsync(id);
 
@@ -65,7 +65,7 @@ namespace mhwilds.Application.Services
             return MapWeaponToResponse(weapon);
         }
 
-        public async Task<GetWeaponResponse> CreateAsync(WeaponRequest request)
+        public async Task<WeaponResponse> CreateAsync(WeaponRequest request)
         {
             BaseWeapon weapon = MapRequestToWeapon(request);
 
@@ -85,7 +85,7 @@ namespace mhwilds.Application.Services
             return MapWeaponToResponse(createdWeapon);
         }
 
-        public async Task<List<GetWeaponResponse>> CreateRangeAsync(List<WeaponRequest> requests)
+        public async Task<List<WeaponResponse>> CreateRangeAsync(List<WeaponRequest> requests)
         {
             var weapons = new List<BaseWeapon>();
 
@@ -107,7 +107,7 @@ namespace mhwilds.Application.Services
                 createdWeapons.Count);
 
             // map each weapon to its appropriate type
-            var responses = new List<GetWeaponResponse>();
+            var responses = new List<WeaponResponse>();
             foreach (var weapon in createdWeapons)
             {
                 var response = MapWeaponToResponse(weapon);
@@ -117,7 +117,7 @@ namespace mhwilds.Application.Services
             return responses;
         }
 
-        public async Task<GetWeaponResponse> UpdateAsync(int id, WeaponRequest request)
+        public async Task<WeaponResponse> UpdateAsync(int id, WeaponRequest request)
         {
             var existingWeapon = await _weaponRepository.GetByIdAsync(id);
             if (existingWeapon == null)
@@ -151,7 +151,7 @@ namespace mhwilds.Application.Services
         }
 
         #region Helper Methods
-        private GetWeaponResponse MapWeaponToResponse(BaseWeapon weapon)
+        private WeaponResponse MapWeaponToResponse(BaseWeapon weapon)
         {
             return weapon switch
             {

@@ -1,16 +1,23 @@
-﻿namespace mhwilds.Application.DTO.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace mhwilds.Application.DTO.Request
 {
-    public class SkillRequest
+    public record SkillRequest
     {
-        public required string Name { get; set; }
-        public required string Type { get; set; }
-        public required string Description { get; set; }
-        public required List<CreateSkillRankRequest> Ranks { get; set; } = [];
+        [Required]
+        public string Name { get; init; } = string.Empty;
+        [Required]
+        public string Type { get; init; } = string.Empty;
+        [Required]
+        public string Description { get; init; } = string.Empty;
+        public List<CreateSkillRankRequest> Ranks { get; init; } = [];
     }
 
-    public class CreateSkillRankRequest
+    public record CreateSkillRankRequest
     {
-        public required int Level { get; set; }
-        public required string Description { get; set; }
+        [Required]
+        public int Level { get; init; }
+        [Required]
+        public string Description { get; init; } = string.Empty;
     }
 }

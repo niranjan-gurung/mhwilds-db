@@ -1,7 +1,6 @@
 ﻿using JsonSubTypes;
 using mhwilds.Application.DTO.Response;
 using mhwilds.Domain.EnumTypes;
-using mhwilds.Domain.Entities.Weapons.Common;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,99 +23,104 @@ namespace mhwilds.Application.DTO.Request
     [JsonSubtypes.KnownSubType(typeof(CreateBowRequest), WeaponType.Bow)]
     public abstract class WeaponRequest
     {
-        public required string Name { get; set; }
-        public required string Description { get; set; }
-        public required WeaponType WeaponType { get; set; }
-        public required int Defense { get; set; }
-        [Range(1, 8)]
-        public required int Rarity { get; set; }
-        public List<int>? Slot { get; set; }
-        [Range(-100, 100)]
-        public required int Affinity { get; set; }
-        public required CreateDamageRequest Damage { get; set; }
-        public CreateElementRequest? Element { get; set; }
-        public List<GetSkillRankResponse>? Skills { get; set; }
+        [Required]
+        public string Name { get; init; } = string.Empty;
+        [Required]
+        public string Description { get; init; } = string.Empty;
+        [Required]
+        public WeaponType WeaponType { get; init; }
+        [Required]
+        public int Defense { get; init; }
+        [Required, Range(1, 8)]
+        public int Rarity { get; init; }
+        public List<int>? Slot { get; init; }
+        [Required, Range(-100, 100)]
+        public int Affinity { get; init; }
+        [Required]
+        public CreateDamageRequest Damage { get; init; } = null!;
+        public CreateElementRequest? Element { get; init; }
+        public List<SkillRankResponse>? Skills { get; init; }
     }
 
     #region Melee Weapons
     public class CreateGreatswordRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateLongswordRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateDualBladesRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateSwordAndShieldRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateHammerRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateHuntingHornRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateGunlanceRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
-        public CreateShellRequest? Shell { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
+        public CreateShellRequest? Shell { get; init; }
     }
 
     public class CreateLanceRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
     }
 
     public class CreateChargeBladesRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
-        public CreatePhialRequest Phial { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
+        public CreatePhialRequest? Phial { get; init; }
     }
 
     public class CreateSwitchAxeRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
-        public CreatePhialRequest Phial { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
+        public CreatePhialRequest? Phial { get; init; }
     }
 
     public class CreateInsectGlaiveRequest : WeaponRequest
     {
-        public CreateSharpnessRequest? Sharpness { get; set; }
-        [Range(1, 10)]
-        public int KinsectLevel { get; set; }
+        public CreateSharpnessRequest? Sharpness { get; init; }
+        [Required, Range(1, 10)]
+        public int KinsectLevel { get; init; }
     }
     #endregion
 
     #region Ranged Weapons
     public class CreateLightBowgunRequest : WeaponRequest
     {
-        public List<CreateAmmoRequest>? Ammo { get; set; }
+        public List<CreateAmmoRequest>? Ammo { get; init; }
 
         [StringLength(20)]
-        public string? SpecialAmmo { get; set; }
+        public string? SpecialAmmo { get; init; }
     }
 
     public class CreateHeavyBowgunRequest : WeaponRequest
     {
-        public List<CreateAmmoRequest>? Ammo { get; set; }
+        public List<CreateAmmoRequest>? Ammo { get; init; }
     }
 
     public class CreateBowRequest : WeaponRequest
     {
-        public List<string>? Coatings { get; set; }
+        public List<string>? Coatings { get; init; }
     }
     #endregion
 
@@ -124,52 +128,58 @@ namespace mhwilds.Application.DTO.Request
     public class CreateDamageRequest
     {
         [Required]
-        public int Raw { get; set; }
+        public int Raw { get; init; }
         [Required]
-        public int Display { get; set; }
+        public int Display { get; init; }
     }
 
     public class CreateElementRequest
     {
-        public string? Type { get; set; }
-        public CreateDamageRequest? Damage { get; set; }
+        public string? Type { get; init; }
+        public CreateDamageRequest? Damage { get; init; }
     }
 
     public class CreateSharpnessRequest
     {
-        public int Red { get; set; }
-        public int Orange { get; set; }
-        public int Yellow { get; set; }
-        public int Green { get; set; }
-        public int Blue { get; set; }
-        public int White { get; set; }
-        public int Purple { get; set; }
+        [Required] 
+        public int Red { get; init; }
+        [Required] 
+        public int Orange { get; init; }
+        [Required] 
+        public int Yellow { get; init; }
+        [Required] 
+        public int Green { get; init; }
+        [Required] 
+        public int Blue { get; init; }
+        [Required] 
+        public int White { get; init; }
+        [Required] 
+        public int Purple { get; init; }
     }
 
     public class CreateShellRequest
     {
         [Required]
-        public string Type { get; set; } = string.Empty;
-        [Range(1, 3)]
-        public int Power { get; set; }
+        public string Type { get; init; } = string.Empty;
+        [Required, Range(1, 3)]
+        public int Power { get; init; }
     }
 
     public class CreatePhialRequest
     {
-        [Required]
-        public string Type { get; set; }
-        public CreateDamageRequest? Damage { get; set; }
+        public string? Type { get; init; }
+        public CreateDamageRequest? Damage { get; init; }
     }
 
     public class CreateAmmoRequest
     {
         [Required]
-        public string Type { get; set; } = string.Empty;
+        public string Type { get; init; } = string.Empty;
         [Range(1, 3)]
-        public int Level { get; set; }
+        public int Level { get; init; }
         [Range(1, 99)]
-        public int Capacity { get; set; }
-        public bool? Rapid { get; set; }
+        public int Capacity { get; init; }
+        public bool? Rapid { get; init; }
     }
     #endregion
 }

@@ -24,7 +24,7 @@ namespace mhwilds.Application.Services
             _logger = logger;
         }
 
-        public async Task<List<GetCharmResponse>> GetAllAsync()
+        public async Task<List<CharmResponse>> GetAllAsync()
         {
             var charms = await _charmRepository.GetAllAsync();
 
@@ -34,10 +34,10 @@ namespace mhwilds.Application.Services
                 return [];
             }
 
-            return charms.Adapt<List<GetCharmResponse>>();
+            return charms.Adapt<List<CharmResponse>>();
         }
 
-        public async Task<GetCharmResponse?> GetByIdAsync(int id)
+        public async Task<CharmResponse?> GetByIdAsync(int id)
         {
             var charm = await _charmRepository.GetByIdAsync(id);
 
@@ -47,10 +47,10 @@ namespace mhwilds.Application.Services
                 return null;
             }
 
-            return charm.Adapt<GetCharmResponse>();
+            return charm.Adapt<CharmResponse>();
         }
 
-        public async Task<GetCharmResponse> CreateAsync(CharmRequest request)
+        public async Task<CharmResponse> CreateAsync(CharmRequest request)
         {
             var charm = request.Adapt<Charm>();
 
@@ -65,10 +65,10 @@ namespace mhwilds.Application.Services
             var createdCharm = await _charmRepository.CreateAsync(charm);
             _logger.LogInformation("Created new charm with ID: {id}", createdCharm.Id);
 
-            return createdCharm.Adapt<GetCharmResponse>();
+            return createdCharm.Adapt<CharmResponse>();
         }
 
-        public async Task<List<GetCharmResponse>> CreateRangeAsync(List<CharmRequest> requests)
+        public async Task<List<CharmResponse>> CreateRangeAsync(List<CharmRequest> requests)
         {
             var charms = requests.Adapt<List<Charm>>();
 
@@ -89,10 +89,10 @@ namespace mhwilds.Application.Services
             var createdCharms = await _charmRepository.CreateRangeAsync(charms);
             _logger.LogInformation("Created {Count} new charms", createdCharms.Count);
 
-            return createdCharms.Adapt<List<GetCharmResponse>>();
+            return createdCharms.Adapt<List<CharmResponse>>();
         }
 
-        public async Task<GetCharmResponse> UpdateAsync(int id, CharmRequest request)
+        public async Task<CharmResponse> UpdateAsync(int id, CharmRequest request)
         {
             var existingCharm = await _charmRepository.GetByIdAsync(id);
 
@@ -116,7 +116,7 @@ namespace mhwilds.Application.Services
             var updatedCharm = await _charmRepository.UpdateAsync(charm);
 
             _logger.LogInformation("Updated charm with ID {Id}", id);
-            return updatedCharm.Adapt<GetCharmResponse>();
+            return updatedCharm.Adapt<CharmResponse>();
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -135,7 +135,7 @@ namespace mhwilds.Application.Services
             return deleted;
         }
 
-        private async Task HandleCharmRankSkillAssignment(CharmRank charmRank, List<GetSkillRankResponse>? skills)
+        private async Task HandleCharmRankSkillAssignment(CharmRank charmRank, List<SkillRankResponse>? skills)
         {
             if (skills?.Count > 0)
             {

@@ -24,7 +24,7 @@ namespace mhwilds.Application.Services
             _logger = logger;
         }
 
-        public async Task<List<GetDecorationResponse>> GetAllAsync()
+        public async Task<List<DecorationResponse>> GetAllAsync()
         {
             var decorations = await _decorationRepository.GetAllAsync();
 
@@ -34,10 +34,10 @@ namespace mhwilds.Application.Services
                 return [];
             }
 
-            return decorations.Adapt<List<GetDecorationResponse>>();
+            return decorations.Adapt<List<DecorationResponse>>();
         }
 
-        public async Task<GetDecorationResponse?> GetByIdAsync(int id)
+        public async Task<DecorationResponse?> GetByIdAsync(int id)
         {
             var decoration = await _decorationRepository.GetByIdAsync(id);
 
@@ -47,10 +47,10 @@ namespace mhwilds.Application.Services
                 return null;
             }
 
-            return decoration.Adapt<GetDecorationResponse>();
+            return decoration.Adapt<DecorationResponse>();
         }
 
-        public async Task<GetDecorationResponse> CreateAsync(DecorationRequest request)
+        public async Task<DecorationResponse> CreateAsync(DecorationRequest request)
         {
             var decoration = request.Adapt<Decoration>();
 
@@ -59,10 +59,10 @@ namespace mhwilds.Application.Services
             var createdDecoration = await _decorationRepository.CreateAsync(decoration);
             _logger.LogInformation("Created new decoration with ID: {id}", createdDecoration.Id);
 
-            return createdDecoration.Adapt<GetDecorationResponse>();
+            return createdDecoration.Adapt<DecorationResponse>();
         }
 
-        public async Task<List<GetDecorationResponse>> CreateRangeAsync(List<DecorationRequest> requests)
+        public async Task<List<DecorationResponse>> CreateRangeAsync(List<DecorationRequest> requests)
         {
             var decorations = requests.Adapt<List<Decoration>>();
 
@@ -77,10 +77,10 @@ namespace mhwilds.Application.Services
             var createdDecorations = await _decorationRepository.CreateRangeAsync(decorations);
             _logger.LogInformation("Created {Count} new decorations", createdDecorations.Count);
 
-            return createdDecorations.Adapt<List<GetDecorationResponse>>();
+            return createdDecorations.Adapt<List<DecorationResponse>>();
         }
 
-        public async Task<GetDecorationResponse> UpdateAsync(int id, DecorationRequest request)
+        public async Task<DecorationResponse> UpdateAsync(int id, DecorationRequest request)
         {
             var existingDecoration = await _decorationRepository.GetByIdAsync(id);
 
@@ -97,7 +97,7 @@ namespace mhwilds.Application.Services
             var updatedDecoration = await _decorationRepository.UpdateAsync(decoration);
 
             _logger.LogInformation("Updated decoration with ID {Id}", id);
-            return updatedDecoration.Adapt<GetDecorationResponse>();
+            return updatedDecoration.Adapt<DecorationResponse>();
         }
 
         public async Task<bool> DeleteAsync(int id)

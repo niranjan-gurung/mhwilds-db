@@ -20,7 +20,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetDecorationResponse>>> GetAll()
+        public async Task<ActionResult<List<DecorationResponse>>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetDecorationResponse>> Get([FromRoute] int id)
+        public async Task<ActionResult<DecorationResponse>> Get([FromRoute] int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetDecorationResponse>> Create([FromBody] DecorationRequest request)
+        public async Task<ActionResult<DecorationResponse>> Create([FromBody] DecorationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<ActionResult<List<GetDecorationResponse>>> CreateRange([FromBody] List<DecorationRequest> requests)
+        public async Task<ActionResult<List<DecorationResponse>>> CreateRange([FromBody] List<DecorationRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetDecorationResponse>> Update([FromRoute] int id, [FromBody] DecorationRequest request)
+        public async Task<ActionResult<DecorationResponse>> Update([FromRoute] int id, [FromBody] DecorationRequest request)
         {
             if (!ModelState.IsValid)
             {

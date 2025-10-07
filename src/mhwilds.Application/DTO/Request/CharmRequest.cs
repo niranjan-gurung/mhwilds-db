@@ -1,19 +1,24 @@
 ﻿using mhwilds.Application.DTO.Response;
+using System.ComponentModel.DataAnnotations;
 
 namespace mhwilds.Application.DTO.Request
 {
-    public class CharmRequest
+    public record CharmRequest
     {
-        public required string Name { get; set; }
-        public required List<CreateCharmRankRequest> Ranks { get; set; } = [];
+        [Required]
+        public string Name { get; init; } = string.Empty;
+        public List<CreateCharmRankRequest> Ranks { get; init; } = [];
     }
 
-    public class CreateCharmRankRequest
+    public record CreateCharmRankRequest
     {
-        public required string Name { get; set; }
-        public required string Description { get; set; }
-        public int Level { get; set; }
-        public int Rarity { get; set; }
-        public required List<GetSkillRankResponse> Skills { get; set; } = [];
+        [Required]
+        public string Name { get; init; } = string.Empty;
+        [Required]
+        public string Description { get; init; } = string.Empty;
+        public int Level { get; init; }
+        [Required, Range(1, 8)]
+        public int Rarity { get; init; }
+        public List<SkillRankResponse> Skills { get; init; } = [];
     }
 }

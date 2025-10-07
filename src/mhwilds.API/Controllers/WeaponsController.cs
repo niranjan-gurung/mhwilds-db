@@ -21,7 +21,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetWeaponResponse>>> GetAll()
+        public async Task<ActionResult<List<WeaponResponse>>> GetAll()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetWeaponResponse>> Get([FromRoute] int id)
+        public async Task<ActionResult<WeaponResponse>> Get([FromRoute] int id)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetWeaponResponse>> Create([FromBody] WeaponRequest request)
+        public async Task<ActionResult<WeaponResponse>> Create([FromBody] WeaponRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<ActionResult<List<GetWeaponResponse>>> CreateRange([FromBody] List<WeaponRequest> requests)
+        public async Task<ActionResult<List<WeaponResponse>>> CreateRange([FromBody] List<WeaponRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetWeaponResponse>> Update([FromRoute] int id, [FromBody] WeaponRequest request)
+        public async Task<ActionResult<WeaponResponse>> Update([FromRoute] int id, [FromBody] WeaponRequest request)
         {
             if (!ModelState.IsValid)
             {

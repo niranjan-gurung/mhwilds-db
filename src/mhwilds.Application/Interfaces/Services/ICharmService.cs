@@ -5,11 +5,11 @@ namespace mhwilds.Application.Interfaces.Services
 {
     public interface ICharmService
     {
-        Task<List<GetCharmResponse>> GetAllAsync();
-        Task<GetCharmResponse?> GetByIdAsync(int id);
-        Task<GetCharmResponse> CreateAsync(CharmRequest request);
-        Task<List<GetCharmResponse>> CreateRangeAsync(List<CharmRequest> requests);
-        Task<GetCharmResponse> UpdateAsync(int id, CharmRequest request);
+        Task<List<CharmResponse>> GetAllAsync();
+        Task<CharmResponse?> GetByIdAsync(int id);
+        Task<CharmResponse> CreateAsync(CharmRequest request);
+        Task<List<CharmResponse>> CreateRangeAsync(List<CharmRequest> requests);
+        Task<CharmResponse> UpdateAsync(int id, CharmRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

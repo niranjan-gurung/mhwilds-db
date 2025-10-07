@@ -21,7 +21,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetCharmResponse>>> GetAll()
+        public async Task<ActionResult<List<CharmResponse>>> GetAll()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetCharmResponse>> Get([FromRoute] int id)
+        public async Task<ActionResult<CharmResponse>> Get([FromRoute] int id)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetCharmResponse>> Create([FromBody] CharmRequest request)
+        public async Task<ActionResult<CharmResponse>> Create([FromBody] CharmRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<ActionResult<List<GetCharmResponse>>> CreateRange([FromBody] List<CharmRequest> requests)
+        public async Task<ActionResult<List<CharmResponse>>> CreateRange([FromBody] List<CharmRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetCharmResponse>> Update([FromRoute] int id, [FromBody] CharmRequest request)
+        public async Task<ActionResult<CharmResponse>> Update([FromRoute] int id, [FromBody] CharmRequest request)
         {
             if (!ModelState.IsValid)
             {

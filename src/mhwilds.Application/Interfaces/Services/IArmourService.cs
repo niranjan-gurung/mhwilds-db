@@ -5,11 +5,11 @@ namespace mhwilds.Application.Interfaces.Services
 {
     public interface IArmourService
     {
-        Task<List<GetArmourResponse>> GetAllAsync();
-        Task<GetArmourResponse?> GetByIdAsync(int id);
-        Task<GetArmourResponse> CreateAsync(ArmourRequest request);
-        Task<List<GetArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests);
-        Task<GetArmourResponse> UpdateAsync(int id, ArmourRequest request);
+        Task<List<ArmourResponse>> GetAllAsync();
+        Task<ArmourResponse?> GetByIdAsync(int id);
+        Task<ArmourResponse> CreateAsync(ArmourRequest request);
+        Task<List<ArmourResponse>> CreateRangeAsync(List<ArmourRequest> requests);
+        Task<ArmourResponse> UpdateAsync(int id, ArmourRequest request);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -1,11 +1,18 @@
-﻿namespace mhwilds.Application.DTO.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace mhwilds.Application.DTO.Request
 {
-    public class ResistancesRequest
+    public record ResistancesRequest
     {
-        public required int Fire { get; set; }
-        public required int Water { get; set; }
-        public required int Ice { get; set; }
-        public required int Thunder { get; set; }
-        public required int Dragon { get; set; }
+        [Required]
+        public int Fire { get; init; }
+        [Required]
+        public int Water { get; init; }
+        [Required]
+        public int Ice { get; init; }
+        [Required]
+        public int Thunder { get; init; }
+        [Required]
+        public int Dragon { get; init; }
     }
 }

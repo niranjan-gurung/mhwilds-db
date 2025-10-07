@@ -20,7 +20,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetSkillResponse>>> GetAll()
+        public async Task<ActionResult<List<SkillResponse>>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetSkillResponse>> Get([FromRoute] int id)
+        public async Task<ActionResult<SkillResponse>> Get([FromRoute] int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetSkillResponse>> Create([FromBody] SkillRequest request)
+        public async Task<ActionResult<SkillResponse>> Create([FromBody] SkillRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<ActionResult<List<GetSkillResponse>>> CreateRange([FromBody] List<SkillRequest> requests)
+        public async Task<ActionResult<List<SkillResponse>>> CreateRange([FromBody] List<SkillRequest> requests)
         {
             if (!ModelState.IsValid)
             {

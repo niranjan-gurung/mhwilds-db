@@ -21,7 +21,7 @@ namespace mhwilds.Application.Services
             _logger = logger;
         }
 
-        public async Task<List<GetSkillResponse>> GetAllAsync()
+        public async Task<List<SkillResponse>> GetAllAsync()
         {
             var skills = await _skillRepository.GetAllAsync();
 
@@ -31,10 +31,10 @@ namespace mhwilds.Application.Services
                 return [];
             }
 
-            return skills.Adapt<List<GetSkillResponse>>();
+            return skills.Adapt<List<SkillResponse>>();
         }
 
-        public async Task<GetSkillResponse?> GetByIdAsync(int id)
+        public async Task<SkillResponse?> GetByIdAsync(int id)
         {
             var skill = await _skillRepository.GetByIdAsync(id);
 
@@ -44,27 +44,27 @@ namespace mhwilds.Application.Services
                 return null;
             }
 
-            return skill.Adapt<GetSkillResponse>();
+            return skill.Adapt<SkillResponse>();
         }
 
-        public async Task<GetSkillResponse> CreateAsync(SkillRequest request)
+        public async Task<SkillResponse> CreateAsync(SkillRequest request)
         {
             var skill = request.Adapt<Skill>();
 
             var createdSkill = await _skillRepository.CreateAsync(skill);
             _logger.LogInformation("Created new skill with ID: {id}", createdSkill.Id);
 
-            return createdSkill.Adapt<GetSkillResponse>();
+            return createdSkill.Adapt<SkillResponse>();
         }
 
-        public async Task<List<GetSkillResponse>> CreateRangeAsync(List<SkillRequest> requests)
+        public async Task<List<SkillResponse>> CreateRangeAsync(List<SkillRequest> requests)
         {
             var skills = requests.Adapt<List<Skill>>();
 
             var createdSkills = await _skillRepository.CreateRangeAsync(skills);
             _logger.LogInformation("Created {Count} new skills", createdSkills.Count);
 
-            return createdSkills.Adapt<List<GetSkillResponse>>();
+            return createdSkills.Adapt<List<SkillResponse>>();
         }
 
         public async Task<bool> DeleteAsync(int id)

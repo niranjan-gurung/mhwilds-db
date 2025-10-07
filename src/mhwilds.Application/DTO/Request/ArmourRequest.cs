@@ -2,18 +2,21 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace mhwilds.Application.DTO.Request
-{
-    public class ArmourRequest
+{   public record ArmourRequest
     {
-        public required string Name { get; set; }
-        public string? Slug { get; set; }
-        public required string Type { get; set; }
-        public required string Rank { get; set; }
-        [Range(1, 8)]
-        public required int Rarity { get; set; }
-        public required int Defense { get; set; }
-        public required ResistancesRequest Resistances { get; set; }
-        public required List<int> Slots { get; set; } = [];
-        public required List<GetSkillRankResponse> Skills { get; set; } = [];
+        [Required] 
+        public string Name { get; init; } = string.Empty;
+        [Required] 
+        public string Type { get; init; } = string.Empty;
+        [Required] 
+        public string Rank { get; init; } = string.Empty;
+        [Required, Range(1, 8)] 
+        public int Rarity { get; init; }
+        [Required] 
+        public int Defense { get; init; }
+        [Required]
+        public ResistancesRequest Resistances { get; init; } = null!;
+        public List<int> Slots { get; init; } = [];
+        public List<SkillRankResponse> Skills { get; init; } = [];
     }
 }

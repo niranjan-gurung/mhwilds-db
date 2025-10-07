@@ -20,7 +20,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetArmourResponse>>> GetAll()
+        public async Task<ActionResult<List<ArmourResponse>>> GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetArmourResponse>> Get([FromRoute] int id)
+        public async Task<ActionResult<ArmourResponse>> Get([FromRoute] int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetArmourResponse>> Create([FromBody] ArmourRequest request)
+        public async Task<ActionResult<ArmourResponse>> Create([FromBody] ArmourRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<ActionResult<List<GetArmourResponse>>> CreateRange([FromBody] List<ArmourRequest> requests)
+        public async Task<ActionResult<List<ArmourResponse>>> CreateRange([FromBody] List<ArmourRequest> requests)
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace mhwilds.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetArmourResponse>> Update([FromRoute] int id, [FromBody] ArmourRequest request)
+        public async Task<ActionResult<ArmourResponse>> Update([FromRoute] int id, [FromBody] ArmourRequest request)
         {
             if (!ModelState.IsValid)
             {

@@ -5,10 +5,10 @@ namespace mhwilds.Application.Interfaces.Services
 {
     public interface ISkillService
     {
-        Task<List<GetSkillResponse>> GetAllAsync();
-        Task<GetSkillResponse?> GetByIdAsync(int id);
-        Task<GetSkillResponse> CreateAsync(SkillRequest request);
-        Task<List<GetSkillResponse>> CreateRangeAsync(List<SkillRequest> requests);
+        Task<List<SkillResponse>> GetAllAsync();
+        Task<SkillResponse?> GetByIdAsync(int id);
+        Task<SkillResponse> CreateAsync(SkillRequest request);
+        Task<List<SkillResponse>> CreateRangeAsync(List<SkillRequest> requests);
         Task<bool> DeleteAsync(int id);
     }
 }

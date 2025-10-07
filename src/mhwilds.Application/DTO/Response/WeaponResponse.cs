@@ -1,6 +1,5 @@
 ﻿using JsonSubTypes;
 using mhwilds.Domain.EnumTypes;
-using mhwilds.Domain.Entities.Weapons.Common;
 using Newtonsoft.Json;
 
 namespace mhwilds.Application.DTO.Response
@@ -20,78 +19,78 @@ namespace mhwilds.Application.DTO.Response
     [JsonSubtypes.KnownSubType(typeof(GetBowResponse), WeaponType.Bow)]
     [JsonSubtypes.KnownSubType(typeof(GetLightBowgunResponse), WeaponType.LightBowgun)]
     [JsonSubtypes.KnownSubType(typeof(GetHeavyBowgunResponse), WeaponType.HeavyBowgun)]
-    public abstract class GetWeaponResponse
+    public abstract class WeaponResponse
     {
         [JsonProperty(Order = 1)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         [JsonProperty("type")]
         public WeaponType WeaponType { get; set; }
         public int Defense { get; set; }
         public int Rarity { get; set; }
         public List<int>? Slot { get; set; }
         public int Affinity { get; set; }
-        public GetDamageResponse Damage { get; set; }
+        public GetDamageResponse Damage { get; set; } = null!;
         public GetElementResponse? Element { get; set; }
-        public List<GetSkillRankResponse>? Skills { get; set; }
+        public List<SkillRankResponse>? Skills { get; set; }
     }
 
     #region Melee Weapons
-    public class GetGreatswordResponse : GetWeaponResponse
+    public class GetGreatswordResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetLongswordResponse : GetWeaponResponse
+    public class GetLongswordResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetDualBladesResponse : GetWeaponResponse
+    public class GetDualBladesResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetSwordAndShieldResponse : GetWeaponResponse
+    public class GetSwordAndShieldResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetHammerResponse : GetWeaponResponse
+    public class GetHammerResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetHuntingHornResponse : GetWeaponResponse
+    public class GetHuntingHornResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetGunlanceResponse : GetWeaponResponse
+    public class GetGunlanceResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
         public GetShellResponse? Shell { get; set; }
     }
 
-    public class GetLanceResponse : GetWeaponResponse
+    public class GetLanceResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
     }
 
-    public class GetChargeBladesResponse : GetWeaponResponse
+    public class GetChargeBladesResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        public GetPhialResponse Phial { get; set; }
+        public GetPhialResponse? Phial { get; set; }
     }
 
-    public class GetSwitchAxeResponse : GetWeaponResponse
+    public class GetSwitchAxeResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
-        public GetPhialResponse Phial { get; set; }
+        public GetPhialResponse? Phial { get; set; }
     }
 
-    public class GetInsectGlaiveResponse : GetWeaponResponse
+    public class GetInsectGlaiveResponse : WeaponResponse
     {
         public GetSharpnessResponse? Sharpness { get; set; }
         public int KinsectLevel { get; set; }
@@ -99,18 +98,18 @@ namespace mhwilds.Application.DTO.Response
     #endregion
 
     #region Ranged Weapons
-    public class GetBowResponse : GetWeaponResponse
+    public class GetBowResponse : WeaponResponse
     {
         public List<string> Coatings { get; set; } = [];
     }
 
-    public class GetLightBowgunResponse : GetWeaponResponse
+    public class GetLightBowgunResponse : WeaponResponse
     {
         public List<GetLBGAmmoResponse> Ammo { get; set; } = [];
         public string? SpecialAmmo { get; set; }
     }
 
-    public class GetHeavyBowgunResponse : GetWeaponResponse
+    public class GetHeavyBowgunResponse : WeaponResponse
     {
         public List<GetHBGAmmoResponse> Ammo { get; set; } = [];
     }
@@ -162,7 +161,7 @@ namespace mhwilds.Application.DTO.Response
 
     public class GetPhialResponse
     {
-        public string Type { get; set; }
+        public string? Type { get; set; }
         public GetDamageResponse? Damage { get; set; }
         public bool ShouldSerializeDamage()
         {

@@ -25,7 +25,7 @@ namespace mhwilds.Application.Mapping
         private static void ConfigureWeaponEntityToResponseMappings()
         {
             // configure each weapon type to its specific response DTO
-            TypeAdapterConfig<BaseWeapon, GetWeaponResponse>
+            TypeAdapterConfig<BaseWeapon, WeaponResponse>
                 .NewConfig()
                 .Include<Greatsword, GetGreatswordResponse>()
                 .Include<Longsword, GetLongswordResponse>()
