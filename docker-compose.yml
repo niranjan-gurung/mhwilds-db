@@ -1,33 +1,27 @@
 services:
-    mhwilds-api:
-        image: ${DOCKER_REGISTRY-}mhwildsapi
-        build:
-            context: ./src
-            dockerfile: mhwilds.API/Dockerfile
-        ports:
-            - "5000:5000"
-            - "5001:5001"
-        depends_on:
-            - postgres
-
     postgres:
-        image: postgres:latest
+        image: postgres:17
         environment:
-            POSTGRES_DB: mhwilds_db
-            POSTGRES_USER: postgres 
-            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         ports:
             - "5432:5432"
         volumes:
             - pgdata:/var/lib/postgresql/data
 
-    pgadmin:
-        image: dpage/pgadmin4:latest
+    mhwilds.api:
+        image: ${DOCKER_REGISTRY-}mhwildsapi
+        build:
+            context: ./src
+            dockerfile: mhwilds.API/Dockerfile
         environment:
-            PGADMIN_DEFAULT_EMAIL: admin@admin.com
-            PGADMIN_DEFAULT_PASSWORD: admin
+            ASPNETCORE_ENVIRONMENT: Development
+            ASPNETCORE_HTTP_PORTS: 8080
+            ConnectionStrings__Database: ${DATABASE_CONNECTION}
         ports:
-            - "8080:80"
+            - "5000:8080"
+            - "5001:8081"
         depends_on:
             - postgres
 
